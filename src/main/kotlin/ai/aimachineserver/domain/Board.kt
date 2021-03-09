@@ -1,12 +1,11 @@
 package ai.aimachineserver.domain
 
-class Board {
-    private companion object {
-        const val BOARD_SIZE = 3
-        const val BLANK_VALUE = 0
-    }
+class Board(private val allFieldValues: Array<IntArray> = Array(SIZE) { IntArray(SIZE) { BLANK_VALUE } }) {
 
-    private val allFieldValues: Array<IntArray> = Array(BOARD_SIZE) { IntArray(BOARD_SIZE) { BLANK_VALUE } }
+    companion object {
+        const val SIZE = 3
+        private const val BLANK_VALUE = 0
+    }
 
     fun getAllFieldValues() = allFieldValues
 
