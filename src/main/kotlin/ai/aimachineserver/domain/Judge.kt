@@ -27,16 +27,12 @@ class Judge {
     }
 
     private fun haveSameValuesDiagonally(fieldValues: Array<IntArray>) = when {
-        abs(
-            (fieldValues.indices).sumOf { rowIndex ->
-                fieldValues[rowIndex][rowIndex]
-            }
-        ) == Board.SIZE -> true
-        abs(
-            (fieldValues.indices).sumOf { rowIndex ->
-                fieldValues[fieldValues.lastIndex - rowIndex][rowIndex]
-            }
-        ) == Board.SIZE -> true
+        abs((fieldValues.indices).sumOf { rowIndex ->
+            fieldValues[rowIndex][rowIndex]
+        }) == Board.SIZE -> true
+        abs((fieldValues.indices).sumOf { rowIndex ->
+            fieldValues[fieldValues.lastIndex - rowIndex][rowIndex]
+        }) == Board.SIZE -> true
         else -> false
     }
 }
