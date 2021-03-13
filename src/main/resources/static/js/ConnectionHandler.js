@@ -7,6 +7,15 @@ class ConnectionHandler {
     #clientId = null;
     #movementAllowed = false;
 
+    static #getImagePath(fieldToken) {
+        switch (fieldToken) {
+            case 1:
+                return "../X.png";
+            case -1:
+                return "../O.png";
+        }
+    }
+
     connectToServer(onConnectedHandler) {
         this.#socket = io(ConnectionHandler.#serverUrl, ConnectionHandler.#connectionOptions);
         if (this.#socket.disconnected) {
@@ -23,13 +32,15 @@ class ConnectionHandler {
                 console.log("player id: " + this.#clientId);
             });
             this.#socket.on("field_to_be_marked", (data) => {
-                let rowIndex = data["rowIndex"];
-                let colIndex = data["colIndex"];
-                let fieldToken = data["fieldToken"];
+                const json = JSON.parse(data)
+                const rowIndex = json["rowIndex"];
+                const colIndex = json["colIndex"];
+                const fieldToken = json["fieldToken"];
                 console.log("field to be marked (row, col, token): " + rowIndex, colIndex, fieldToken);
                 $("#box_" + rowIndex + colIndex).prepend($('<img>', {
                     src: ConnectionHandler.#getImagePath(fieldToken),
-                    style: "max-width:100%; max-height:100%;"
+                    style: "max-width:100%; max-height:100%;",
+                    alt: fieldToken
                 }));
             });
             this.#socket.on("server_message", (data) => {
@@ -38,15 +49,6 @@ class ConnectionHandler {
             this.#socket.on("movement_allowed", (data) => {
                 this.#movementAllowed = data === this.#clientId;
             });
-        }
-    }
-
-    static #getImagePath(fieldToken) {
-        switch (fieldToken) {
-            case 1:
-                return "/static/X.png";
-            case -1:
-                return "/static/O.png";
         }
     }
 
