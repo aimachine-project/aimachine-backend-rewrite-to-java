@@ -1,5 +1,5 @@
 class ConnectionHandler {
-    static #serverUrl = location.protocol + "//" + document.domain + ":" + location.port;
+    static #serverUrl = location.protocol + "//" + document.domain + ":" + 9090;
     static #connectionOptions = {autoConnect: false, reconnection: false};
 
     #socket = null;
