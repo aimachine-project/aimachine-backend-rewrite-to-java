@@ -2,7 +2,7 @@ package ai.aimachineserver.domain
 
 import com.corundumstudio.socketio.SocketIOServer
 import org.json.JSONObject
-import java.util.*
+import java.util.UUID
 
 class Game(private val gameId: String, private val server: SocketIOServer) {
     private companion object {
