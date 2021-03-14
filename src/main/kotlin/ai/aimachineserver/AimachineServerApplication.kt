@@ -17,7 +17,6 @@ class AimachineServerApplication {
     fun socketIOServer(): SocketIOServer? {
         val config = Configuration()
         config.hostname = "0.0.0.0"
-        config.port = 9090
         val server = SocketIOServer(config)
 
         val games = mutableMapOf<String, Game>()
