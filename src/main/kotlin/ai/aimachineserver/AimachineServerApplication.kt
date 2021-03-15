@@ -8,16 +8,15 @@ import org.json.JSONObject
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.web.bind.annotation.CrossOrigin
 import java.io.Serializable
 
 @SpringBootApplication
-@CrossOrigin(origins = ["https://aimachine-backend.herokuapp.com"])
 class AimachineServerApplication {
 
     @Bean
     fun socketIOServer(): SocketIOServer? {
         val config = Configuration()
+        config.origin = "https://aimachine-backend.herokuapp.com"
         config.hostname = "0.0.0.0"
         config.port = 9000
         val server = SocketIOServer(config)
