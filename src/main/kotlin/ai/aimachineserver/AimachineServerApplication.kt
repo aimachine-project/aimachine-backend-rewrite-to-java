@@ -16,7 +16,7 @@ class AimachineServerApplication {
     @Bean
     fun socketIOServer(): SocketIOServer? {
         val config = Configuration()
-        config.hostname = "0.0.0.0"
+        config.hostname = "https://89.64.80.249"
         config.port = 5000
         val server = SocketIOServer(config)
 
