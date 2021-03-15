@@ -16,8 +16,7 @@ class AimachineServerApplication {
     @Bean
     fun socketIOServer(): SocketIOServer? {
         val config = Configuration()
-        config.origin = "https://aimachine-backend.herokuapp.com"
-        config.hostname = "0.0.0.0"
+        config.hostname = "https://aimachine-backend.herokuapp.com"
         config.port = 9000
         val server = SocketIOServer(config)
 
