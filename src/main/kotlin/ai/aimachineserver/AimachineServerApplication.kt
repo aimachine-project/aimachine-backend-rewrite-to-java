@@ -16,8 +16,8 @@ class AimachineServerApplication {
     @Bean
     fun socketIOServer(): SocketIOServer? {
         val config = Configuration()
-        config.hostname = "https://89.64.80.249"
-        config.port = 5000
+        config.hostname = "0.0.0.0"
+        config.port = 9000
         val server = SocketIOServer(config)
 
         val games = mutableMapOf<String, Game>()
