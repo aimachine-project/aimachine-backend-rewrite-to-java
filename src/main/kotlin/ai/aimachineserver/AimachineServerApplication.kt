@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import java.io.Serializable
 
 @SpringBootApplication
-@CrossOrigin(origins = ["https://https://aimachine-backend.herokuapp.com"])
+@CrossOrigin(origins = ["https://aimachine-backend.herokuapp.com"])
 class AimachineServerApplication {
 
     @Bean
