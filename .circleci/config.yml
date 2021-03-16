@@ -1,7 +1,16 @@
-version: 2
+version: 2.1
+
+workflows:
+  Build_Test_Deploy:
+    jobs:
+      - Static Analysis
+      - Build
+      - Test:
+          requires:
+            - Build
 
 jobs:
-  build:
+  Static Analysis:
     docker:
       - image: circleci/openjdk:11-jdk
 
@@ -12,6 +21,21 @@ jobs:
     steps:
       - checkout
       - run: gradle ktlintCheck
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle.kts" }}
+
+  Build:
+    docker:
+      - image: circleci/openjdk:11-jdk
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
+    steps:
+      - checkout
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "build.gradle.kts" }}
@@ -24,4 +48,19 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle.kts" }}
 
-      - run: gradle test
+  Test:
+    docker:
+      - image: circleci/openjdk:11-jdk
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle.kts" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run: gradle check
