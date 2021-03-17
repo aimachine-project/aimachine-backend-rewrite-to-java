@@ -58,6 +58,9 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle.kts" }}
+      - run:
+          name: Build Jar
+          command: gradle bootJar
 
   Test:
     docker:
