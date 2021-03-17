@@ -11,14 +11,15 @@ workflows:
             - Build
       - Deploy Trigger:
           type: approval
+          requires:
+            - Static Analysis
+            - Test
           filters:
             tags:
               only: /.*/
       - Deploy:
           requires:
             - Deploy Trigger
-            - Static Analysis
-            - Test
 
 jobs:
   Static Analysis:
@@ -56,11 +57,13 @@ jobs:
       - run:
           name: Load dependencies
           command: gradle dependencies
+
       - save_cache:
           name: Execute build script
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle.kts" }}
+
       - run:
           name: Build Jar
           command: gradle bootJar
@@ -80,9 +83,10 @@ jobs:
             - v1-dependencies-{{ checksum "build.gradle.kts" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
+
       - run:
           name: Run tests
-          command: gradle check
+          command: gradle test
 
   Deploy:
     docker:
@@ -90,12 +94,9 @@ jobs:
 
     steps:
       - checkout
-      - run:
-          name: Setup Heroku
-          command: bash .circleci/setup-heroku.sh
 
       - run:
-          name: Download Heroku
+          name: Setup Heroku
           command:
             wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
 
