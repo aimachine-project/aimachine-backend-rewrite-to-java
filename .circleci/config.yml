@@ -101,7 +101,7 @@ jobs:
           command: bash .circleci/setup-heroku.sh
 
       - run:
-          name: Deploy to Host
+          name: Deploy to host
           command: |
             git push heroku ${CIRCLE_BRANCH}:main
             sleep 5 # sleep for 5 seconds to wait for dynos
