@@ -1,9 +1,7 @@
-version: 2.1
-
-orbs:
-  heroku: circleci/heroku@1.2.5 # Invoke the Heroku orb for deployment
+version: 2
 
 workflows:
+  version: 2
   Build_Test_Deploy:
     jobs:
       - Static Analysis
@@ -11,9 +9,14 @@ workflows:
       - Test:
           requires:
             - Build
-      - heroku/deploy-via-git:
+      - Deploy Trigger:
           type: approval
+          filters:
+            tags:
+              only: /.*/
+      - Deploy:
           requires:
+            - Deploy Trigger
             - Static Analysis
             - Test
 
@@ -80,3 +83,26 @@ jobs:
       - run:
           name: Run tests
           command: gradle check
+
+  Deploy:
+    docker:
+      - image: circleci/openjdk:11-jdk
+
+    machine:
+      enabled: true
+
+    environment:
+      HEROKU_APP_NAME: $HEROKU_APP_NAME
+
+    steps:
+      - checkout
+      - run:
+          name: Setup Heroku
+          command: bash .circleci/setup-heroku.sh
+
+      - run:
+          name: Deploy to Host
+          command: |
+            git push heroku ${CIRCLE_BRANCH}:main
+            sleep 5 # sleep for 5 seconds to wait for dynos
+            heroku restart
