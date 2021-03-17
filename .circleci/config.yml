@@ -1,6 +1,10 @@
 version: 2.1
 
+orbs:
+  heroku: circleci/heroku@1.2.5
+
 workflows:
+  version: 2.1
   Build_Test_Deploy:
     jobs:
       - Static Analysis
@@ -8,6 +12,17 @@ workflows:
       - Test:
           requires:
             - Build
+      - Deploy Trigger:
+          type: approval
+          requires:
+            - Static Analysis
+            - Test
+          filters:
+            tags:
+              only: /.*/
+      - Deploy:
+          requires:
+            - Deploy Trigger
 
 jobs:
   Static Analysis:
@@ -42,11 +57,19 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: gradle dependencies
+      - run:
+          name: Load dependencies
+          command: gradle dependencies
+
       - save_cache:
+          name: Execute build script
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle.kts" }}
+
+      - run:
+          name: Build Jar
+          command: gradle bootJar
 
   Test:
     docker:
@@ -63,4 +86,14 @@ jobs:
             - v1-dependencies-{{ checksum "build.gradle.kts" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-      - run: gradle check
+
+      - run:
+          name: Run tests
+          command: gradle test
+
+  Deploy:
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git
