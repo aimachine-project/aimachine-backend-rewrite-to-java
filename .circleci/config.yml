@@ -1,7 +1,10 @@
-version: 2
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@1.2.5
 
 workflows:
-  version: 2
+  version: 2.1
   Build_Test_Deploy:
     jobs:
       - Static Analysis
@@ -17,7 +20,7 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - Deploy:
+      - heroku/deploy-via-git:
           requires:
             - Deploy Trigger
 
@@ -32,11 +35,6 @@ jobs:
 
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle.kts" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
       - run: gradle ktlintCheck
       - save_cache:
           paths:
@@ -92,20 +90,3 @@ jobs:
       - run:
           name: Run tests
           command: gradle test
-
-  Deploy:
-    docker:
-      - image: circleci/openjdk:11-jdk
-
-    steps:
-      - checkout
-
-      - run:
-          name: Setup Heroku
-          command:
-            wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
-
-      - run:
-          name: Deploy to host
-          command: |
-            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git ${CIRCLE_BRANCH}:main
