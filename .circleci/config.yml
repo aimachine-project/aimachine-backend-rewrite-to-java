@@ -25,6 +25,7 @@ workflows:
             - Deploy Trigger
       - Finish:
           requires:
+            - Static Analysis
             - Test
 
 jobs:
