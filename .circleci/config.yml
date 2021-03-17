@@ -88,9 +88,6 @@ jobs:
     docker:
       - image: circleci/openjdk:11-jdk
 
-    machine:
-      enabled: true
-
     environment:
       HEROKU_APP_NAME: $HEROKU_APP_NAME
 
@@ -101,8 +98,10 @@ jobs:
           command: bash .circleci/setup-heroku.sh
 
       - run:
+          name: Download Heroku
+          command:
+            wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+      - run:
           name: Deploy to host
           command: |
-            git push heroku ${CIRCLE_BRANCH}:main
-            sleep 5 # sleep for 5 seconds to wait for dynos
-            heroku restart
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
