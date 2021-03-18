@@ -1,1 +1,2 @@
-java -Dserver.port=9090 $JAVA_OPTS -jar build/libs/*.jar
+server:
+    port: $PORT
