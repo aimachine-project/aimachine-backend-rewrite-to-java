@@ -19,7 +19,7 @@ class AimachineServerApplication {
     fun corsConfigurer(): WebMvcConfigurer {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/").allowedOrigins("https://aimachine-backend.herokuapp.com/")
+                registry.addMapping("/").allowedOrigins("https://aimachine-backend.herokuapp.com:9000/*")
             }
         }
     }
@@ -29,6 +29,7 @@ class AimachineServerApplication {
         val config = Configuration()
         config.hostname = "0.0.0.0"
         config.port = 9000
+//        config.origin = "*"
 
         val server = SocketIOServer(config)
 

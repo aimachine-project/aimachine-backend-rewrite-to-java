@@ -5,13 +5,13 @@ orbs:
 
 workflows:
   version: 2.1
-  Check, Build and Test:
-    jobs:
-      - Static Analysis
-      - Build
-      - Test:
-          requires:
-            - Build
+#  Check, Build and Test:
+#    jobs:
+#      - Static Analysis
+#      - Build
+#      - Test:
+#          requires:
+#            - Build
 
   Deploy:
     jobs:
