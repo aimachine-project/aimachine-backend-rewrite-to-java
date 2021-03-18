@@ -29,7 +29,7 @@ class AimachineServerApplication {
         val config = Configuration()
         config.hostname = "0.0.0.0"
         config.port = 9000
-//        config.origin = "*"
+        config.origin = "*"
 
         val server = SocketIOServer(config)
 
