@@ -23,7 +23,7 @@ class AimachineServerApplication {
                     .addMapping("/**")
                     .allowedOrigins("**")
                     .exposedHeaders("*")
-//                    .allowCredentials(true)
+                    .allowCredentials(true)
             }
         }
     }
