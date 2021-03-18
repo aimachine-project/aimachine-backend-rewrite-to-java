@@ -22,6 +22,7 @@ class AimachineServerApplication {
                 registry
                     .addMapping("/**")
                     .allowedOrigins("**")
+                    .exposedHeaders("*")
                     .allowCredentials(true)
             }
         }
@@ -32,7 +33,6 @@ class AimachineServerApplication {
         val config = Configuration()
         config.hostname = "0.0.0.0"
         config.port = 9000
-        config.origin = "https://aimachine-backend.herokuapp.com/"
 
         val server = SocketIOServer(config)
 
@@ -40,6 +40,9 @@ class AimachineServerApplication {
         var roomsCounter = 1
 
         server.addConnectListener { client ->
+            if (client.isChannelOpen){
+                println("super")
+            }
             println("Client ${client.sessionId} connected")
             val gameId = "game$roomsCounter"
             client.sendEvent("game_id", gameId)
