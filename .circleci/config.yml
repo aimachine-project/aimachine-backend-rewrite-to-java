@@ -23,7 +23,6 @@ workflows:
 
       - Deploy to Heroku:
           requires:
-            - Build
             - Deploy Trigger
 
 jobs:
@@ -94,13 +93,6 @@ jobs:
           command: gradle test
 
   Deploy to Heroku:
-    executor: heroku/default
-    steps:
-      - checkout
-      - heroku/install
-      - heroku/deploy-via-git
-
-  Auto-deploy Main:
     executor: heroku/default
     steps:
       - checkout
