@@ -15,7 +15,7 @@ workflows:
 
   Deploy:
     jobs:
-      - Deploy Trigger:
+      - Trigger Deploy:
           type: approval
           filters:
             branches:
@@ -23,7 +23,7 @@ workflows:
 
       - Deploy to Heroku:
           requires:
-            - Deploy Trigger
+            - Trigger Deploy
 
 jobs:
   Static Analysis:
