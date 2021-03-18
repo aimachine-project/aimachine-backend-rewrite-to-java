@@ -21,7 +21,7 @@ class AimachineServerApplication {
             override fun addCorsMappings(registry: CorsRegistry) {
                 registry
                     .addMapping("/")
-                    .allowedOrigins("*")
+                    .allowedOrigins("**")
                     .allowCredentials(true)
             }
         }
@@ -32,7 +32,6 @@ class AimachineServerApplication {
         val config = Configuration()
         config.hostname = "0.0.0.0"
         config.port = 9000
-        config.origin = "*"
 
         val server = SocketIOServer(config)
 
