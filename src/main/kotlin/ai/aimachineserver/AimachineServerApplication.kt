@@ -20,7 +20,7 @@ class AimachineServerApplication {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
                 registry
-                    .addMapping("")
+                    .addMapping("*")
                     .allowedOrigins("**")
                     .exposedHeaders("*")
                     .allowCredentials(true)
