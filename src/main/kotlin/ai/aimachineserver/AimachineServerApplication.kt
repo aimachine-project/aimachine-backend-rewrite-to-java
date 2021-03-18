@@ -21,7 +21,7 @@ class AimachineServerApplication {
             override fun addCorsMappings(registry: CorsRegistry) {
                 registry
                     .addMapping("/**")
-                    .allowedOrigins("https://aimachine-backend.herokuapp.com")
+                    .allowedOrigins("**")
                     .allowCredentials(true)
             }
         }
