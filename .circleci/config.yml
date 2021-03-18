@@ -23,12 +23,8 @@ workflows:
 
       - Deploy to Heroku:
           requires:
+            - Build
             - Deploy Trigger
-
-      - Auto-deploy Main:
-          filters:
-            branches:
-              only: heroku-deployment
 
 jobs:
   Static Analysis:
