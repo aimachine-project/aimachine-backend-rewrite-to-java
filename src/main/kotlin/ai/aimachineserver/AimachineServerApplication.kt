@@ -19,7 +19,10 @@ class AimachineServerApplication {
     fun corsConfigurer(): WebMvcConfigurer {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/").allowedOrigins("https://aimachine-backend.herokuapp.com:9000/*")
+                registry
+                    .addMapping("/")
+                    .allowedOrigins("*")
+                    .allowCredentials(true)
             }
         }
     }
