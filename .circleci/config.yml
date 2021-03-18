@@ -18,12 +18,17 @@ workflows:
       - Deploy Trigger:
           type: approval
           filters:
-            tags:
+            branches:
               only: /.*/
 
       - Deploy to Heroku:
           requires:
             - Deploy Trigger
+
+      - Auto-deploy Main:
+          filters:
+            branches:
+              only: heroku-deployment
 
 jobs:
   Static Analysis:
@@ -93,6 +98,13 @@ jobs:
           command: gradle test
 
   Deploy to Heroku:
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git
+
+  Auto-deploy Main:
     executor: heroku/default
     steps:
       - checkout
