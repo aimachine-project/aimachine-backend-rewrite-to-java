@@ -15,18 +15,18 @@ import java.io.Serializable
 @SpringBootApplication
 class AimachineServerApplication {
 
-    @Bean
-    fun corsConfigurer(): WebMvcConfigurer {
-        return object : WebMvcConfigurer {
-            override fun addCorsMappings(registry: CorsRegistry) {
-                registry
-                    .addMapping("*")
-                    .allowedOrigins("**")
-                    .exposedHeaders("*")
-                    .allowCredentials(true)
-            }
-        }
-    }
+//    @Bean
+//    fun corsConfigurer(): WebMvcConfigurer {
+//        return object : WebMvcConfigurer {
+//            override fun addCorsMappings(registry: CorsRegistry) {
+//                registry
+//                    .addMapping("*")
+//                    .allowedOrigins("**")
+//                    .exposedHeaders("*")
+//                    .allowCredentials(true)
+//            }
+//        }
+//    }
 
     @Bean
     fun socketIOServer(): SocketIOServer? {
