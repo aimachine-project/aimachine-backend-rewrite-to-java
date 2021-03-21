@@ -21,11 +21,7 @@ class AimachineServerApplication {
             override fun addCorsMappings(registry: CorsRegistry) {
                 registry
                     .addMapping("/**")
-//                    .allowedOrigins("*")
-                    .allowedMethods("GET", "POST")
-                    .allowedHeaders("Origin", "Accept", "Content-Type", "Authorization", "Access-Control-Allow-Origin")
-//                    .exposedHeaders("*")
-//                    .allowCredentials(true)
+                    .exposedHeaders("*")
                     .allowedOriginPatterns("*")
             }
         }
