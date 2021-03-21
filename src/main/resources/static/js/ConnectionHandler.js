@@ -1,6 +1,6 @@
 class ConnectionHandler {
-    static #serverUrl = "ws://" + document.domain + ":" + 9000;
-    static #connectionOptions = {autoConnect: false, reconnection: false, transport: ['websocket']};
+    static #serverUrl = location.protocol + "//" + document.domain + ":" + 9000;
+    static #connectionOptions = {autoConnect: false, reconnection: false, secure: true, transport: ['websocket']};
 
     #socket = null;
     #gameId = null;
