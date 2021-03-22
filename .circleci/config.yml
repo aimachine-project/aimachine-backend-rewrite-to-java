@@ -5,24 +5,25 @@ orbs:
 
 workflows:
   version: 2.1
-  Build_Test_Deploy:
+  Check, Build and Test:
     jobs:
       - Static Analysis
       - Build
       - Test:
           requires:
             - Build
-      - Deploy Trigger:
+
+  Deploy:
+    jobs:
+      - Trigger Deploy:
           type: approval
-          requires:
-            - Static Analysis
-            - Test
           filters:
-            tags:
+            branches:
               only: /.*/
-      - Deploy:
+
+      - Deploy to Heroku:
           requires:
-            - Deploy Trigger
+            - Trigger Deploy
 
 jobs:
   Static Analysis:
@@ -91,7 +92,7 @@ jobs:
           name: Run tests
           command: gradle test
 
-  Deploy:
+  Deploy to Heroku:
     executor: heroku/default
     steps:
       - checkout

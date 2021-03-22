@@ -1,6 +1,6 @@
 class ConnectionHandler {
-    static #serverUrl = location.protocol + "//" + document.domain + ":" + 9090;
-    static #connectionOptions = {autoConnect: false, reconnection: false};
+    static #serverUrl = location.protocol + "//" + document.domain + ":" + 9000;
+    static #connectionOptions = {autoConnect: false, reconnection: false, secure: true};
 
     #socket = null;
     #gameId = null;
@@ -21,6 +21,7 @@ class ConnectionHandler {
         if (this.#socket.disconnected) {
             this.#socket.open();
             this.#socket.on("connect", () => {
+                console.log("connected")
                 onConnectedHandler();
             });
             this.#socket.on("game_id", (response) => {
