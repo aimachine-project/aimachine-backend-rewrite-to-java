@@ -1,6 +1,7 @@
 package ai.aimachineserver
 
 import ai.aimachineserver.domain.Game
+import ch.qos.logback.core.util.OptionHelper.getEnv
 import com.corundumstudio.socketio.Configuration
 import com.corundumstudio.socketio.SocketIOServer
 import com.google.gson.Gson
@@ -17,7 +18,12 @@ class AimachineServerApplication {
     fun socketIOServer(): SocketIOServer? {
         val config = Configuration()
         config.hostname = "0.0.0.0"
-        config.port = 9000
+        val port = try {
+            System.getenv("PORT").toInt()
+        } catch (e: Exception) {
+            9090
+        }
+        config.port = port
         config.isAllowCustomRequests = true
 
         val server = SocketIOServer(config)
