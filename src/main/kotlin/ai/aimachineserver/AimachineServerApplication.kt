@@ -19,11 +19,13 @@ class AimachineServerApplication {
         val config = Configuration()
         config.hostname = "0.0.0.0"
         val port = try {
-            System.getenv("PORT").toInt()
+            9090 //System.getenv("PORT").toInt()
         } catch (e: Exception) {
             9090
         }
+        println("Trying to establish socketio server at port: $port")
         config.port = port
+        config.origin = "Access-Control-Allow-Origin"
         config.isAllowCustomRequests = true
 
         val server = SocketIOServer(config)
