@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 class WebSocketConfig : WebSocketConfigurer {
     override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
-        registry.addHandler(webSocketServerHandler(), "/games/tictactoe").setAllowedOrigins("*")
+        registry.addHandler(webSocketServerHandler(), "/game/tictactoe").setAllowedOrigins("*")
     }
 
     @Bean

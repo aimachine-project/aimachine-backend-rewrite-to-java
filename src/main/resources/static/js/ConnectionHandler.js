@@ -1,6 +1,6 @@
 class ConnectionHandler {
     static #protocol = location.protocol.replace('http', 'ws')
-    static #serverUrl = this.#protocol + "//" + document.domain + ":" + location.port + "/games/tictactoe"
+    static #serverUrl = this.#protocol + "//" + document.domain + ":" + location.port + "/game/tictactoe"
 
     #socket = null;
     #gameId = null;
@@ -39,7 +39,7 @@ class ConnectionHandler {
                     const rowIndex = data["rowIndex"]
                     const colIndex = data["colIndex"]
                     const fieldToken = data["fieldToken"]
-                    console.log("field to be marked (row, col, token): " + rowIndex, colIndex, fieldToken)
+                    console.log("field to be marked (row, col, token): ", rowIndex, colIndex, fieldToken)
                     $("#box_" + rowIndex + colIndex).prepend($('<img>', {
                         src: ConnectionHandler.#getImagePath(fieldToken),
                         style: "max-width:100%; max-height:100%;",
