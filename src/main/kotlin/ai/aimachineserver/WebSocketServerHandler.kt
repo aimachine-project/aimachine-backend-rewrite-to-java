@@ -58,18 +58,16 @@ class WebSocketServerHandler : TextWebSocketHandler() {
         println("client ${session.id} disconnected")
         val gameId = games.entries.find { it.value.playerSessions.contains(session) }?.key
         if (gameId != null) {
-            println("player ${session.id} left game $gameId")
             val game = games.getValue(gameId)
             game.onDisconnect(session)
+            games.remove(gameId)
             val serverMessage = "Game: $gameId has been disbanded. Restart client to play a new game"
             game.broadcastMessage(
                 JSONObject()
                     .put("eventType", "server_message")
                     .put("eventMessage", serverMessage)
             )
-            println("Games: ${games.keys}")
-            games.remove(gameId)
-            println("Games: ${games.keys}")
+            println("Ongoing games: ${games.keys}")
         }
     }
 }
