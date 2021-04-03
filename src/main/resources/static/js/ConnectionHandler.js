@@ -1,6 +1,6 @@
 class ConnectionHandler {
-    static #serverUrl = location.protocol + "//" + document.domain + ":" + 9000;
-    static #connectionOptions = {autoConnect: false, reconnection: false, secure: true};
+    static #protocol = location.protocol.replace('http', 'ws')
+    static #serverUrl = this.#protocol + "//" + document.domain + ":" + location.port + "/games/tictactoe"
 
     #socket = null;
     #gameId = null;
@@ -17,60 +17,66 @@ class ConnectionHandler {
     }
 
     connectToServer(onConnectedHandler) {
-        this.#socket = io(ConnectionHandler.#serverUrl, ConnectionHandler.#connectionOptions);
-        if (this.#socket.disconnected) {
-            this.#socket.open();
-            this.#socket.on("connect", () => {
-                console.log("connected")
-                onConnectedHandler();
-            });
-            this.#socket.on("game_id", (response) => {
-                this.#gameId = response;
-                console.log("game id: " + this.#gameId);
-            });
-            this.#socket.on("client_id", (data) => {
-                this.#clientId = data;
-                console.log("player id: " + this.#clientId);
-            });
-            this.#socket.on("field_to_be_marked", (data) => {
-                const json = JSON.parse(data)
-                const rowIndex = json["rowIndex"];
-                const colIndex = json["colIndex"];
-                const fieldToken = json["fieldToken"];
-                console.log("field to be marked (row, col, token): " + rowIndex, colIndex, fieldToken);
-                $("#box_" + rowIndex + colIndex).prepend($('<img>', {
-                    src: ConnectionHandler.#getImagePath(fieldToken),
-                    style: "max-width:100%; max-height:100%;",
-                    alt: fieldToken
-                }));
-            });
-            this.#socket.on("server_message", (data) => {
-                console.log("server message: " + data);
-            });
-            this.#socket.on("movement_allowed", (data) => {
-                this.#movementAllowed = data === this.#clientId;
-            });
+        this.#socket = new WebSocket(ConnectionHandler.#serverUrl)
+        this.#socket.onopen = () => {
+            console.log("connected")
+            onConnectedHandler()
+        }
+        const client = this
+        this.#socket.onmessage = function (event) {
+            const json = JSON.parse(event.data)
+            switch (json["eventType"]) {
+                case "game_id":
+                    client.#gameId = json["eventMessage"]
+                    console.log("game id: " + client.#gameId)
+                    break
+                case "client_id":
+                    client.#clientId = json["eventMessage"]
+                    console.log("player id: " + client.#clientId)
+                    break
+                case "field_to_be_marked":
+                    const data = JSON.parse(json["eventMessage"])
+                    const rowIndex = data["rowIndex"]
+                    const colIndex = data["colIndex"]
+                    const fieldToken = data["fieldToken"]
+                    console.log("field to be marked (row, col, token): " + rowIndex, colIndex, fieldToken)
+                    $("#box_" + rowIndex + colIndex).prepend($('<img>', {
+                        src: ConnectionHandler.#getImagePath(fieldToken),
+                        style: "max-width:100%; max-height:100%;",
+                        alt: fieldToken
+                    }))
+                    break
+                case "movement_allowed":
+                    client.#movementAllowed = json["eventMessage"] === client.#clientId
+                    break
+                case "server_message":
+                    console.log(json["eventMessage"])
+                    break
+                default:
+                    console.log("message not handled: " + event.data)
+            }
         }
     }
 
     sendFieldClickedMessage(rowIndex, colIndex) {
-        if (this.#socket !== null && this.#socket.connected) {
+        if (this.#socket !== null) {
             if (this.#movementAllowed === true) {
-                this.#socket.emit("field_clicked", {
-                    "gameId": this.#gameId,
-                    "rowIndex": rowIndex,
-                    "colIndex": colIndex
-                });
+                this.#socket.send(JSON.stringify({
+                    "eventType": "field_clicked",
+                    "eventMessage": {
+                        "gameId": this.#gameId,
+                        "rowIndex": rowIndex,
+                        "colIndex": colIndex
+                    }
+                }))
             }
         }
     }
 
     disconnect(onDisconnectedHandler) {
-        if (this.#socket !== null) {
-            if (this.#socket.connected) {
-                this.#socket.disconnect();
-                onDisconnectedHandler();
-            }
+        if (this.#socket !== null && this.#socket.readyState !== WebSocket.CLOSED) {
+            this.#socket.close()
+            onDisconnectedHandler()
         }
     }
 }
