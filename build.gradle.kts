@@ -33,6 +33,7 @@ dependencies {
     implementation("com.corundumstudio.socketio:netty-socketio:1.7.18")
     implementation("org.json:json:20210307")
     implementation("com.google.code.gson:gson:2.8.6")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
