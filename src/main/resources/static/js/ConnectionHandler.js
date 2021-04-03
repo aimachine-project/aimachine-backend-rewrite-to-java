@@ -22,8 +22,8 @@ class ConnectionHandler {
             console.log("connected")
             onConnectedHandler()
         }
+        const client = this
         this.#socket.onmessage = function (event) {
-            const client = this
             const json = JSON.parse(event.data)
             switch (json["eventType"]) {
                 case "game_id":
@@ -53,9 +53,8 @@ class ConnectionHandler {
                     console.log(json["eventMessage"])
                     break
                 default:
-                    console.log("message not handled")
+                    console.log("message not handled: " + event.data)
             }
-            console.log('server message:  ' + json["server_message"])
         }
     }
 
