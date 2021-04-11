@@ -4,7 +4,6 @@ orbs:
   heroku: circleci/heroku@1.2.5
 
 workflows:
-  version: 2.1
   Check, Build and Test:
     jobs:
       - Static Analysis
@@ -21,7 +20,19 @@ workflows:
             branches:
               only: /.*/
 
-      - Deploy to Heroku:
+      - Deploy Backend to Heroku:
+          requires:
+            - Trigger Deploy
+
+  Deploy Frontend:
+    jobs:
+      - Trigger Deploy Frontend:
+          type: approval
+          filters:
+            branches:
+              only: /.*/
+
+      - Deploy Frontend to Heroku:
           requires:
             - Trigger Deploy
 
@@ -92,9 +103,17 @@ jobs:
           name: Run tests
           command: gradle test
 
-  Deploy to Heroku:
+  Deploy Backend to Heroku:
     executor: heroku/default
     steps:
       - checkout
       - heroku/install
       - heroku/deploy-via-git
+
+  Deploy Frontend to Heroku:
+    docker:
+      - image: ubuntu-latest
+
+    working_directory: ~/frontend
+    steps:
+      - run: git clone https://github.com/aimachine-project/aimachine-frontend.git
