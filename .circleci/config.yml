@@ -112,8 +112,9 @@ jobs:
 
   Deploy Frontend to Heroku:
     docker:
-      - image: ubuntu-latest
+      - image: circleci/openjdk:11-jdk
 
     working_directory: ~/frontend
     steps:
       - run: git clone https://github.com/aimachine-project/aimachine-frontend.git
+      - run: ls
