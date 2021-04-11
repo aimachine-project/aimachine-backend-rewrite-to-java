@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  heroku: circleci/heroku@1.2.5
+  heroku: circleci/heroku@1.2.6
 
 workflows:
   Check, Build and Test:
@@ -117,4 +117,4 @@ jobs:
     working_directory: ~/frontend
     steps:
       - run: git clone https://github.com/aimachine-project/aimachine-frontend.git
-      - run: ls
+      - run: cd aimachine-frontend && ls
