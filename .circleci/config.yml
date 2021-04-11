@@ -12,9 +12,9 @@ workflows:
           requires:
             - Build
 
-  Deploy:
+  Deploy Backend:
     jobs:
-      - Trigger Deploy:
+      - Trigger Deploy Backend:
           type: approval
           filters:
             branches:
@@ -22,7 +22,7 @@ workflows:
 
       - Deploy Backend to Heroku:
           requires:
-            - Trigger Deploy
+            - Trigger Deploy Backend
 
   Deploy Frontend:
     jobs:
@@ -34,7 +34,7 @@ workflows:
 
       - Deploy Frontend to Heroku:
           requires:
-            - Trigger Deploy
+            - Trigger Deploy Frontend
 
 jobs:
   Static Analysis:
