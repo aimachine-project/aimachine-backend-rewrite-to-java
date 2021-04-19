@@ -31,9 +31,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http
             .authorizeRequests()
-            .antMatchers("/design", "/orders")
+            .antMatchers("/")
             .access("hasRole('ROLE_USER')")
-            .antMatchers("/", "/**").access("permitAll")
             .and()
             .formLogin()
             .loginPage("/login")
