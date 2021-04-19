@@ -1,6 +1,6 @@
 package ai.aimachineserver
 
-import ai.aimachineserver.domain.Game
+import ai.aimachineserver.domain.gamelogic.Game
 import org.json.JSONObject
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
