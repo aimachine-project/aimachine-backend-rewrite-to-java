@@ -8,8 +8,8 @@ spring:
   datasource:
     url: jdbc:h2:file:./users
     driverClassName: org.h2.Driver
-    username: ${USER_DB_USERNAME_AIM}
-    password: ${USER_DB_PASSWORD_AIM}
+    username: ${DB_USER_USERNAME_AIM}
+    password: ${DB_USER_PASSWORD_AIM}
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:

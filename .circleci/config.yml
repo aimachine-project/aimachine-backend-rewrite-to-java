@@ -4,7 +4,7 @@ orbs:
   heroku: circleci/heroku@1.2.5
 
 workflows:
-  version: 2.1
+  version: 2
   Check, Build and Test:
     jobs:
       - Static Analysis
