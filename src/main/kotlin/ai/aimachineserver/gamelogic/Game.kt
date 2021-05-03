@@ -1,4 +1,4 @@
-package ai.aimachineserver.domain
+package ai.aimachineserver.gamelogic
 
 import org.json.JSONObject
 import org.springframework.web.socket.TextMessage
