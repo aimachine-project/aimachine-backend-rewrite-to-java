@@ -1,4 +1,4 @@
-package ai.aimachineserver.domain.gamelogic
+package ai.aimachineserver.gamelogic
 
 abstract class Player(
     val name: String,

@@ -6,9 +6,14 @@ spring:
     active:
       - dev
   datasource:
-    url: jdbc:h2:mem:usersdb
+    url: jdbc:h2:file:./users
     driverClassName: org.h2.Driver
-    username: sa
-    password: password
+    username: ${USER_DB_USERNAME_AIM}
+    password: ${USER_DB_PASSWORD_AIM}
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  data:
+    rest:
+      base-path: /api
