@@ -20,8 +20,7 @@ class RegistrationController(
     ): ResponseEntity<User> {
         return try {
             val user = userRepository.findAllByUsername(username).single()
-            if (user != null) {
-                passwordEncoder.matches(password, user.password)
+            if (user != null && passwordEncoder.matches(password, user.password)) {
                 ResponseEntity(user, HttpStatus.OK)
             } else {
                 ResponseEntity(HttpStatus.NOT_FOUND)
