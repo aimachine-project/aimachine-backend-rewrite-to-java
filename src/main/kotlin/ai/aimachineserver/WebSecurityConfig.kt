@@ -41,11 +41,11 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http
             .authorizeRequests()
-            .antMatchers("/api/users/**").access("hasAnyRole('USER')")
+            .antMatchers("/api/users/**").hasAnyRole("USER")
+            .antMatchers("/", "/**").permitAll()
             .and().httpBasic()
-//            .antMatchers("/", "/**").permitAll()
             .and().cors()
             .and().csrf().disable()
-// //            .formLogin().disable()
+            .formLogin().disable()
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 
 @RepositoryRestController
-@RequestMapping("/api/register")
+@RequestMapping("/register")
 class RegistrationController(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder
