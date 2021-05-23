@@ -15,25 +15,8 @@ class RegistrationController(
     private val passwordEncoder: PasswordEncoder
 ) {
 
-    @GetMapping
-    fun getUsers(
-        @RequestParam("username") username: String,
-        @RequestParam("password") password: String
-    ): ResponseEntity<User> {
-        return try {
-            val user = userRepository.findByUsername(username)
-            if (user != null && passwordEncoder.matches(password, user.password)) {
-                ResponseEntity(user, HttpStatus.OK)
-            } else {
-                ResponseEntity(HttpStatus.NOT_FOUND)
-            }
-        } catch (e: UsernameNotFoundException) {
-            ResponseEntity(HttpStatus.NOT_FOUND)
-        }
-    }
-
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun postUser(@RequestBody user: User): ResponseEntity<User> {
+    fun registerUser(@RequestBody user: User): ResponseEntity<User> {
         val userAlreadyExists = userRepository.existsByUsername(user.username)
         return if (userAlreadyExists) {
             return ResponseEntity<User>(HttpStatus.CONFLICT)
