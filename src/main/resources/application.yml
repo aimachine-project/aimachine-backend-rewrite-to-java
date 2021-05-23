@@ -7,8 +7,8 @@ spring:
       - dev
   datasource:
     url: jdbc:mysql://localhost:3306/users_db
-    username: root
-    password: sprz€d@m0pla
+    username: ${DB_AIM_USER_USERNAME}
+    password: ${DB_AIM_USER_PASSWORD}
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:

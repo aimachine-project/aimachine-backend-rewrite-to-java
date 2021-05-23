@@ -4,13 +4,12 @@ import lombok.AccessLevel
 import lombok.Data
 import lombok.NoArgsConstructor
 import lombok.RequiredArgsConstructor
+import org.hibernate.annotations.Type
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import java.util.*
+import javax.persistence.*
 
 @Data
 @Entity
@@ -22,16 +21,20 @@ class User(
 ) : UserDetails {
     constructor() : this("", "")
 
-    companion object {
-        private const val serialVersionUID = 1L
+    private companion object {
+        const val serialVersionUID = 1L
+        const val DEFAULT_ROLE_NAME = "ROLE_USER"
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long? = null
+    @GeneratedValue
+    @Type(type = "uuid-char")
+    val id: UUID? = null
+
+    private val role = DEFAULT_ROLE_NAME
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return mutableListOf(SimpleGrantedAuthority("ROLE_USER"))
+        return mutableListOf(SimpleGrantedAuthority(role))
     }
 
     override fun getPassword(): String = password
