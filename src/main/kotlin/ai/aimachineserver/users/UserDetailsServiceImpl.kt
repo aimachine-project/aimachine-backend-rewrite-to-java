@@ -1,4 +1,4 @@
-package ai.aimachineserver.userlogin
+package ai.aimachineserver.users
 
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

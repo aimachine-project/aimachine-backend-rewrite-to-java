@@ -1,8 +1,8 @@
-package ai.aimachineserver.userlogin
+package ai.aimachineserver.users
 
 import org.springframework.data.repository.CrudRepository
 
-interface UserRepository : CrudRepository<User, String> {
+interface UserRepository : CrudRepository<User, Long> {
 
     fun existsByUsername(username: String): Boolean
 

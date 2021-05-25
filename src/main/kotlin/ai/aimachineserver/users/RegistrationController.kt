@@ -1,15 +1,15 @@
-package ai.aimachineserver.userlogin
+package ai.aimachineserver.users
 
 import org.springframework.data.rest.webmvc.RepositoryRestController
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 
 @RepositoryRestController
-@RequestMapping("/register")
+@RequestMapping("/api/register")
 class RegistrationController(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder

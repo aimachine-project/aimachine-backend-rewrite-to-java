@@ -1,7 +1,7 @@
 package ai.aimachineserver
 
-import ai.aimachineserver.userlogin.UserDetailsServiceImpl
-import ai.aimachineserver.userlogin.UserRepository
+import ai.aimachineserver.users.UserDetailsServiceImpl
+import ai.aimachineserver.users.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -17,10 +17,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired
-    private lateinit var userRepo: UserRepository
+    private lateinit var userRepository: UserRepository
 
     @Bean
-    override fun userDetailsService() = UserDetailsServiceImpl(userRepo)
+    override fun userDetailsService() = UserDetailsServiceImpl(userRepository)
 
     @Bean
     fun encoder() = BCryptPasswordEncoder()
@@ -41,7 +41,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http
             .authorizeRequests()
-            .antMatchers("/api/users/**").hasAnyRole("USER")
+            .antMatchers("/api/users/self").hasAnyRole("USER", "ADMIN")
+            .antMatchers("/api/users/**").hasAnyRole("ADMIN")
             .antMatchers("/", "/**").permitAll()
             .and().httpBasic()
             .and().cors()
