@@ -19,7 +19,7 @@ class UsersController(
         return try {
             if (userId != null) {
                 val self = userRepository.findById(userId).get()
-                ResponseEntity(self, HttpStatus.FOUND)
+                ResponseEntity(self, HttpStatus.OK)
             } else {
                 ResponseEntity(HttpStatus.NOT_FOUND)
             }
