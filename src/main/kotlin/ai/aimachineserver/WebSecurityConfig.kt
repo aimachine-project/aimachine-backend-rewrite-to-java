@@ -48,5 +48,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .and().cors()
             .and().csrf().disable()
             .formLogin().disable()
+            .logout()
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/")
     }
 }
