@@ -1,6 +1,6 @@
-MAINTAINER Sebastian Syska (syska.seb@gmail.com)
-
 FROM ubuntu:focal
+
+MAINTAINER Sebastian Syska (syska.seb@gmail.com)
 
 ENV DEBIAN_FRONTEND=noninteractive
 
