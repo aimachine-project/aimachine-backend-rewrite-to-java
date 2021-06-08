@@ -1,40 +1,30 @@
-package ai.aimachineserver.userlogin
+package ai.aimachineserver.users
 
 import org.springframework.data.rest.webmvc.RepositoryRestController
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 
 @RepositoryRestController
-@RequestMapping("/users")
+@RequestMapping("/api/register")
 class RegistrationController(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder
 ) {
 
-    @GetMapping
-    fun getUsers(
-        @RequestParam("username") username: String,
-        @RequestParam("password") password: String
-    ): ResponseEntity<User> {
-        return try {
-            val user = userRepository.findAllByUsername(username).single()
-            if (user != null) {
-                passwordEncoder.matches(password, user.password)
-                ResponseEntity(user, HttpStatus.OK)
-            } else {
-                ResponseEntity(HttpStatus.NOT_FOUND)
-            }
-        } catch (e: NoSuchElementException) {
-            ResponseEntity(HttpStatus.NOT_FOUND)
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity(HttpStatus.CONFLICT)
+    init {
+        val adminUsername = System.getenv("DB_AIM_USER_ROLE_ADMIN_USERNAME")
+        if (adminUsername != null && !userRepository.existsByUsername(adminUsername)) {
+            val adminPassword = System.getenv("DB_AIM_USER_ROLE_ADMIN_PASSWORD")
+            val adminUser = User(adminUsername, passwordEncoder.encode(adminPassword), UserRole.ADMIN.roleName)
+            userRepository.save(adminUser)
         }
     }
 
-    @PostMapping(consumes = ["application/json"])
-    fun postUser(@RequestBody user: User): ResponseEntity<User> {
+    @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun registerUser(@RequestBody user: User): ResponseEntity<User> {
         val userAlreadyExists = userRepository.existsByUsername(user.username)
         return if (userAlreadyExists) {
             return ResponseEntity<User>(HttpStatus.CONFLICT)
