@@ -7,8 +7,8 @@ spring:
       - dev
   datasource:
     url: jdbc:mysql://${DB_AIM_IP}/db_users?createDatabaseIfNotExist=true
-    username: ${DB_AIM_USER_USERNAME}
-    password: ${DB_AIM_USER_PASSWORD}
+    username: ${DB_AIM_USERNAME}
+    password: ${DB_AIM_PASSWORD}
     initialization-mode: always
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect

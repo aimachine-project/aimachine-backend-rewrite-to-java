@@ -14,6 +14,15 @@ class RegistrationController(
     private val passwordEncoder: PasswordEncoder
 ) {
 
+    init {
+        val adminUsername = System.getenv("DB_AIM_USER_ROLE_ADMIN_USERNAME")
+        if (adminUsername != null && !userRepository.existsByUsername(adminUsername)) {
+            val adminPassword = System.getenv("DB_AIM_USER_ROLE_ADMIN_PASSWORD")
+            val adminUser = User(adminUsername, passwordEncoder.encode(adminPassword), UserRole.ADMIN.roleName)
+            userRepository.save(adminUser)
+        }
+    }
+
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun registerUser(@RequestBody user: User): ResponseEntity<User> {
         val userAlreadyExists = userRepository.existsByUsername(user.username)
