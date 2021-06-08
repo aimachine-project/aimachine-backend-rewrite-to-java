@@ -1,6 +1,5 @@
 package ai.aimachineserver.users
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import lombok.AccessLevel
 import lombok.Data
 import lombok.NoArgsConstructor
