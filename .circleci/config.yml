@@ -100,9 +100,9 @@ jobs:
           username: $DOCKERHUB_LOGIN
           password: $DOCKERHUB_PASSWORD
 
-      environment:
-        JVM_OPTS: -Xmx3200m
-        TERM: dumb
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
 
     steps:
       - checkout
