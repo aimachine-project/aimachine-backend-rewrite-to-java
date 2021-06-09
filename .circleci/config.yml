@@ -125,9 +125,9 @@ jobs:
           command: |
             source deployconfig
             if [ -d aimachine-frontend ]; then rm -rf aimachine-frontend; fi
-            git fetch
             git clone --branch $FRONT_BRANCH https://github.com/aimachine-project/aimachine-frontend.git
             cd aimachine-frontend
+            git pull
             docker build -t $DOCKERHUB_LOGIN/aimachine-frontend .
             echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_LOGIN --password-stdin
             docker push $DOCKERHUB_LOGIN/aimachine-frontend
