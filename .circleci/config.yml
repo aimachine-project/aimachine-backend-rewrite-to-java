@@ -124,9 +124,7 @@ jobs:
           name: Build and push Frontend Docker image
           command: |
             source deployconfig
-            if [ -d aimachine-frontend ]; then \
-              rm aimachine-frontend \
-            fi
+            if [ -d aimachine-frontend ]; then rm -rf aimachine-frontend; fi
             git fetch
             git clone --branch $FRONT_BRANCH https://github.com/aimachine-project/aimachine-frontend.git
             cd aimachine-frontend
