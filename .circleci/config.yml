@@ -137,4 +137,4 @@ jobs:
           command: |
             echo -e "$AWS_KEY" > aws.pem
             chmod 400 aws.pem
-            ssh -o "StrictHostKeyChecking no" -i "aws.pem" ubuntu@ec2-18-185-54-110.eu-central-1.compute.amazonaws.com 'sh startup.sh'
+            ssh -o "StrictHostKeyChecking no" -i "aws.pem" $AWS_URL 'sh startup.sh'
