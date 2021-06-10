@@ -1,4 +1,4 @@
-package ai.aimachineserver.domain
+package ai.aimachineserver.gamelogic
 
 class PlayerHuman(
     name: String,

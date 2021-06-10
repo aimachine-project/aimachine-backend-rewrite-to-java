@@ -1,10 +1,10 @@
-package ai.aimachineserver.domain
+package ai.aimachineserver.gamelogic
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
+@SpringBootTest(classes = [Board::class])
 class BoardTest {
 
     private val emptyBoardFields = Array(3) { IntArray(3) { 0 } }

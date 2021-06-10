@@ -1,10 +1,6 @@
 version: 2.1
 
-orbs:
-  heroku: circleci/heroku@1.2.5
-
 workflows:
-  version: 2.1
   Check, Build and Test:
     jobs:
       - Static Analysis
@@ -21,7 +17,7 @@ workflows:
             branches:
               only: /.*/
 
-      - Deploy to Heroku:
+      - Deploy to AWS:
           requires:
             - Trigger Deploy
 
@@ -29,6 +25,9 @@ jobs:
   Static Analysis:
     docker:
       - image: circleci/openjdk:11-jdk
+        auth:
+          username: $DOCKERHUB_LOGIN
+          password: $DOCKERHUB_PASSWORD
 
     environment:
       JVM_OPTS: -Xmx3200m
@@ -45,6 +44,9 @@ jobs:
   Build:
     docker:
       - image: circleci/openjdk:11-jdk
+        auth:
+          username: $DOCKERHUB_LOGIN
+          password: $DOCKERHUB_PASSWORD
 
     environment:
       JVM_OPTS: -Xmx3200m
@@ -68,13 +70,12 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle.kts" }}
 
-      - run:
-          name: Build Jar
-          command: gradle bootJar
-
   Test:
     docker:
       - image: circleci/openjdk:11-jdk
+        auth:
+          username: $DOCKERHUB_LOGIN
+          password: $DOCKERHUB_PASSWORD
 
     environment:
       JVM_OPTS: -Xmx3200m
@@ -92,9 +93,48 @@ jobs:
           name: Run tests
           command: gradle test
 
-  Deploy to Heroku:
-    executor: heroku/default
+  Deploy to AWS:
+    docker:
+      - image: circleci/openjdk:11-jdk
+        auth:
+          username: $DOCKERHUB_LOGIN
+          password: $DOCKERHUB_PASSWORD
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
     steps:
       - checkout
-      - heroku/install
-      - heroku/deploy-via-git
+      - setup_remote_docker:
+          version: 20.10.2
+
+      - run:
+          name: Build Jar
+          command: gradle bootJar
+
+      - run:
+          name: Build and push Backend Docker image
+          command: |
+            docker build -t $DOCKERHUB_LOGIN/aimachine-backend .
+            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_LOGIN --password-stdin
+            docker push $DOCKERHUB_LOGIN/aimachine-backend
+
+      - run:
+          name: Build and push Frontend Docker image
+          command: |
+            source deployconfig
+            if [ -d aimachine-frontend ]; then rm -rf aimachine-frontend; fi
+            git clone --branch $FRONT_BRANCH https://github.com/aimachine-project/aimachine-frontend.git
+            cd aimachine-frontend
+            git pull
+            docker build -t $DOCKERHUB_LOGIN/aimachine-frontend .
+            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_LOGIN --password-stdin
+            docker push $DOCKERHUB_LOGIN/aimachine-frontend
+
+      - run:
+          name: Deploy to AWS
+          command: |
+            echo -e "$AWS_KEY" > aws.pem
+            chmod 400 aws.pem
+            ssh -o "StrictHostKeyChecking no" -i "aws.pem" ubuntu@ec2-18-185-54-110.eu-central-1.compute.amazonaws.com 'sh startup.sh'

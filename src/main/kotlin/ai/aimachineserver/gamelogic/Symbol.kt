@@ -1,4 +1,4 @@
-package ai.aimachineserver.domain
+package ai.aimachineserver.gamelogic
 
 enum class Symbol(val identifier: String, val token: Int) {
     SYMBOL_X("X", 1),
