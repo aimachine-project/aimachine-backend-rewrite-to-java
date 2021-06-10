@@ -135,8 +135,6 @@ jobs:
       - run:
           name: Deploy to AWS
           command: |
-            echo -e "$AWS_KEY"
-            echo -e "$AWS_KEY" > aws.pem
-            echo -e "$(cat aws.pem)"
+            echo -e "$AWS_PASS" > aws.pem
             chmod 400 aws.pem
             ssh -o "StrictHostKeyChecking no" -i "aws.pem" ubuntu@ec2-18-185-54-110.eu-central-1.compute.amazonaws.com
