@@ -119,22 +119,3 @@ jobs:
             docker build -t $DOCKERHUB_LOGIN/aimachine-backend .
             echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_LOGIN --password-stdin
             docker push $DOCKERHUB_LOGIN/aimachine-backend
-
-      - run:
-          name: Build and push Frontend Docker image
-          command: |
-            source deployconfig
-            if [ -d aimachine-frontend ]; then rm -rf aimachine-frontend; fi
-            git clone --branch $FRONT_BRANCH https://github.com/aimachine-project/aimachine-frontend.git
-            cd aimachine-frontend
-            git pull
-            docker build -t $DOCKERHUB_LOGIN/aimachine-frontend .
-            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_LOGIN --password-stdin
-            docker push $DOCKERHUB_LOGIN/aimachine-frontend
-
-      - run:
-          name: Deploy to AWS
-          command: |
-            echo -e "$AWS_KEY" > aws.pem
-            chmod 400 aws.pem
-            ssh -o "StrictHostKeyChecking no" -o "LogLevel ERROR" -i "aws.pem" $AWS_URL 'sh startup.sh'
