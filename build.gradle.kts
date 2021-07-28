@@ -38,6 +38,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("javax.validation:validation-api:2.0.1.Final")
     implementation("mysql:mysql-connector-java:8.0.25")
     implementation("org.json:json:20210307")
     compileOnly("org.projectlombok:lombok")
