@@ -6,9 +6,6 @@ import ai.aimachineserver.domain.user.User
 import ai.aimachineserver.domain.user.UserRepository
 import ai.aimachineserver.domain.user.UserRole
 import ai.aimachineserver.utils.SecurityUtils
-import lombok.RequiredArgsConstructor
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 

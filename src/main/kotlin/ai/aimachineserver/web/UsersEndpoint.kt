@@ -20,7 +20,10 @@ class UsersEndpoint(
 ) {
 
     @PostMapping("register", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun register(@Valid @RequestBody command: RegisterUserCommand): ResponseEntity<UserDto> {
+    fun register(
+        @Valid @RequestBody
+        command: RegisterUserCommand
+    ): ResponseEntity<UserDto> {
         val userDto = userService.register(command)
         return if (userDto != null) {
             ResponseEntity(userDto, HttpStatus.CREATED)
