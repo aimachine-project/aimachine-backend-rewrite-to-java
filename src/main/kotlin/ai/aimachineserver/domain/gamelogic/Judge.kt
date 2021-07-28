@@ -1,4 +1,4 @@
-package ai.aimachineserver.gamelogic
+package ai.aimachineserver.domain.gamelogic
 
 import kotlin.math.abs
 

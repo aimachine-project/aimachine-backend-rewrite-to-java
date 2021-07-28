@@ -1,7 +1,7 @@
-package ai.aimachineserver
+package ai.aimachineserver.config.security
 
-import ai.aimachineserver.users.UserDetailsServiceImpl
-import ai.aimachineserver.users.UserRepository
+import ai.aimachineserver.domain.user.UserDetailsServiceImpl
+import ai.aimachineserver.domain.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

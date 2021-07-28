@@ -1,4 +1,4 @@
-package ai.aimachineserver.users
+package ai.aimachineserver.domain.user
 
 import lombok.AccessLevel
 import lombok.Data

@@ -1,5 +1,6 @@
-package ai.aimachineserver
+package ai.aimachineserver.config.websocket
 
+import ai.aimachineserver.application.WebSocketServerHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.WebSocketHandler

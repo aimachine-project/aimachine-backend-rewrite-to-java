@@ -1,4 +1,4 @@
-package ai.aimachineserver.users
+package ai.aimachineserver.domain.user
 
 import org.springframework.data.rest.webmvc.RepositoryRestController
 import org.springframework.http.HttpStatus
