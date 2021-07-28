@@ -1,7 +1,7 @@
 package ai.aimachineserver.application.dtos
 
 class UserDto(
-    private val id: Long?,
-    private val username: String,
-    private val roles: List<String>
+    val id: Long?,
+    val username: String,
+    val roles: List<String>
 )
