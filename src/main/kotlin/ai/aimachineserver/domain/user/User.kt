@@ -1,24 +1,20 @@
 package ai.aimachineserver.domain.user
 
-import lombok.AccessLevel
-import lombok.Data
-import lombok.NoArgsConstructor
-import lombok.RequiredArgsConstructor
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
 
-@Data
 @Entity
-@RequiredArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 class User(
     private val username: String,
     private val password: String,
     private val role: String = UserRole.USER.roleName
 ) : UserDetails {
-    constructor() : this("", "", "")
+    private constructor() : this("", "", "")
 
     private companion object {
         const val serialVersionUID = 1L
@@ -38,4 +34,16 @@ class User(
     override fun isAccountNonLocked() = true
     override fun isCredentialsNonExpired() = true
     override fun isEnabled() = true
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as User
+        if (id != other.id) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
 }
