@@ -1,7 +1,7 @@
-package ai.aimachineserver
+package ai.aimachineserver.config.security
 
-import ai.aimachineserver.users.UserDetailsServiceImpl
-import ai.aimachineserver.users.UserRepository
+import ai.aimachineserver.application.UserDetailsServiceImpl
+import ai.aimachineserver.domain.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -59,6 +59,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http
             .authorizeRequests()
+            .antMatchers("/api/users/create").permitAll()
             .antMatchers("/api/users/self").hasAnyRole("USER", "ADMIN")
             .antMatchers("/api/users/**").hasAnyRole("ADMIN")
             .antMatchers("/", "/**").permitAll()
@@ -67,7 +68,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .and().csrf().disable()
             .formLogin().disable()
             .logout()
-            .logoutUrl("/logout")
+            .logoutUrl("/api/logout")
             .logoutSuccessUrl("/")
     }
 }
