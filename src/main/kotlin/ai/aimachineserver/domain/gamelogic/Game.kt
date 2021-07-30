@@ -31,10 +31,17 @@ class Game {
                     .put("eventMessage", currentPlayer.name)
             )
         }
+        val playersCount = playerSessions.count()
         broadcastMessage(
             JSONObject()
                 .put("eventType", "server_message")
-                .put("eventMessage", "players in game: ${playerSessions.map { it.id }}")
+                .put("eventMessage", "$playersCount players in game")
+        )
+        val message = if (playersCount == 1) "waiting for opponent" else "game has started"
+        broadcastMessage(
+            JSONObject()
+                .put("eventType", "server_message")
+                .put("eventMessage", message)
         )
     }
 
@@ -86,16 +93,6 @@ class Game {
         } else {
             player1
         }
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "server_message")
-                .put("eventMessage", "movement_allowed: " + currentPlayer.name)
-        )
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "movement_allowed")
-                .put("eventMessage", currentPlayer.name)
-        )
     }
 
     private fun getResultMessage() = if (turnResult == TurnResult.TIE) {
@@ -109,12 +106,12 @@ class Game {
         broadcastMessage(
             JSONObject()
                 .put("eventType", "server_message")
-                .put("eventMessage", "player: ${session.id} disconnected")
+                .put("eventMessage", "player disconnected")
         )
         broadcastMessage(
             JSONObject()
                 .put("eventType", "server_message")
-                .put("eventMessage", "players in game: ${playerSessions.map { it.id }}")
+                .put("eventMessage", "${playerSessions.count()} players in game")
         )
     }
 }
