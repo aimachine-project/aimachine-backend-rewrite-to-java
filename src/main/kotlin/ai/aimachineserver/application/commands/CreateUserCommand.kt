@@ -7,7 +7,7 @@ import javax.validation.constraints.Size
 
 @NoArgsConstructor
 @AllArgsConstructor
-class RegisterUserCommand(
+class CreateUserCommand(
     @NotNull(message = "username cannot be null")
     @Size(min = 1, max = 100)
     val username: String,

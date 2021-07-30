@@ -125,7 +125,8 @@ jobs:
           command: |
             source deployconfig
             if [ -d aimachine-frontend ]; then rm -rf aimachine-frontend; fi
-            git clone --branch $FRONT_BRANCH https://github.com/aimachine-project/aimachine-frontend.git
+            git clone --branch $FRONT_BRANCH $FRONT_REPO_URL
+            if [ "$?" -eq 128 ]; then git clone --branch development $FRONT_REPO_URL; fi
             cd aimachine-frontend
             git pull
             docker build -t $DOCKERHUB_LOGIN/aimachine-frontend .
@@ -138,3 +139,4 @@ jobs:
             echo -e "$AWS_KEY" > aws.pem
             chmod 400 aws.pem
             ssh -o "StrictHostKeyChecking no" -o "LogLevel ERROR" -i "aws.pem" $AWS_URL 'sh startup.sh'
+            echo 🦄

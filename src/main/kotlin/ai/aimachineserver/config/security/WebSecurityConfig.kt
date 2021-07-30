@@ -59,7 +59,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http
             .authorizeRequests()
-            .antMatchers("/api/users/register").permitAll()
+            .antMatchers("/api/users/create").permitAll()
             .antMatchers("/api/users/self").hasAnyRole("USER", "ADMIN")
             .antMatchers("/api/users/**").hasAnyRole("ADMIN")
             .antMatchers("/", "/**").permitAll()

@@ -1,7 +1,7 @@
 package ai.aimachineserver.web
 
 import ai.aimachineserver.application.UserService
-import ai.aimachineserver.application.commands.RegisterUserCommand
+import ai.aimachineserver.application.commands.CreateUserCommand
 import ai.aimachineserver.application.dtos.UserDto
 import org.springframework.data.rest.webmvc.RepositoryRestController
 import org.springframework.http.HttpStatus
@@ -19,13 +19,13 @@ class UsersEndpoint(
     private val userService: UserService
 ) {
 
-    @PostMapping("register", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun register(
+    @PostMapping("create", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun create(
         @Valid
         @RequestBody
-        command: RegisterUserCommand
+        command: CreateUserCommand
     ): ResponseEntity<UserDto> {
-        val userDto = userService.register(command)
+        val userDto = userService.createUser(command)
         return if (userDto != null) {
             ResponseEntity(userDto, HttpStatus.CREATED)
         } else {

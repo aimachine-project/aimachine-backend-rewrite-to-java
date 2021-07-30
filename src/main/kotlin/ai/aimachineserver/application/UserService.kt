@@ -1,6 +1,6 @@
 package ai.aimachineserver.application
 
-import ai.aimachineserver.application.commands.RegisterUserCommand
+import ai.aimachineserver.application.commands.CreateUserCommand
 import ai.aimachineserver.application.dtos.UserDto
 import ai.aimachineserver.domain.user.User
 import ai.aimachineserver.domain.user.UserRepository
@@ -25,7 +25,7 @@ class UserService(
         }
     }
 
-    fun register(command: RegisterUserCommand): UserDto? {
+    fun createUser(command: CreateUserCommand): UserDto? {
         val userAlreadyExists = userRepository.existsByUsername(command.username)
         return if (userAlreadyExists) {
             return null
