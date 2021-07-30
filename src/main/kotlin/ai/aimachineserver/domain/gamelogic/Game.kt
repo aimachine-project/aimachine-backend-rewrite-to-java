@@ -37,7 +37,7 @@ class Game {
                 .put("eventType", "server_message")
                 .put("eventMessage", "$playersCount players in game")
         )
-        val message = if (playersCount == 1) "waiting for opponent" else "game has started"
+        val message = if (playersCount == 1) "Waiting for opponent" else "Game has started"
         broadcastMessage(
             JSONObject()
                 .put("eventType", "server_message")
@@ -53,7 +53,7 @@ class Game {
 
     fun onFieldClicked(rowIndex: Int, colIndex: Int) {
         if (board.isFieldAvailable(rowIndex, colIndex)) {
-            println("clicked [row, col]: [$rowIndex, $colIndex]")
+            println("Clicked [row, col]: [$rowIndex, $colIndex]")
             val data = JSONObject()
                 .put("rowIndex", rowIndex)
                 .put("colIndex", colIndex)
@@ -75,7 +75,7 @@ class Game {
                     broadcastMessage(
                         JSONObject()
                             .put("eventType", "server_message")
-                            .put("eventMessage", "game ended: $resultMessage")
+                            .put("eventMessage", "Game has ended: $resultMessage")
                     )
                     broadcastMessage(
                         JSONObject()
@@ -111,7 +111,7 @@ class Game {
         broadcastMessage(
             JSONObject()
                 .put("eventType", "server_message")
-                .put("eventMessage", "player disconnected")
+                .put("eventMessage", "Player disconnected")
         )
         broadcastMessage(
             JSONObject()

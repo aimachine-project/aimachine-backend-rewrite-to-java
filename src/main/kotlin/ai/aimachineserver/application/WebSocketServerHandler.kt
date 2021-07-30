@@ -13,7 +13,7 @@ class WebSocketServerHandler : TextWebSocketHandler() {
     private var roomsCounter = 1
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        println("client ${session.id} connected")
+        println("Client ${session.id} connected")
         session.sendMessage(
             TextMessage(
                 JSONObject()
@@ -55,13 +55,13 @@ class WebSocketServerHandler : TextWebSocketHandler() {
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        println("client ${session.id} disconnected")
+        println("Client ${session.id} disconnected")
         val gameId = games.entries.find { it.value.playerSessions.contains(session) }?.key
         if (gameId != null) {
             val game = games.getValue(gameId)
             game.onDisconnect(session)
             games.remove(gameId)
-            val serverMessage = "Game: $gameId has been disbanded. Restart client to play a new game"
+            val serverMessage = "Game has been disbanded. Restart client to play a new game"
             game.broadcastMessage(
                 JSONObject()
                     .put("eventType", "server_message")
