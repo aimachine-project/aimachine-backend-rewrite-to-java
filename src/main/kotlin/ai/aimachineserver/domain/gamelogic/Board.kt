@@ -1,4 +1,4 @@
-package ai.aimachineserver.gamelogic
+package ai.aimachineserver.domain.gamelogic
 
 class Board(private val allFieldValues: Array<IntArray> = Array(SIZE) { IntArray(SIZE) { BLANK_VALUE } }) {
 
