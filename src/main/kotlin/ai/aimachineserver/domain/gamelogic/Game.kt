@@ -93,6 +93,11 @@ class Game {
         } else {
             player1
         }
+        broadcastMessage(
+            JSONObject()
+                .put("eventType", "movement_allowed")
+                .put("eventMessage", currentPlayer.name)
+        )
     }
 
     private fun getResultMessage() = if (turnResult == TurnResult.TIE) {
