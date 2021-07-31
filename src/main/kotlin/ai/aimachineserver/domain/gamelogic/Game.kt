@@ -31,10 +31,17 @@ class Game {
                     .put("eventMessage", currentPlayer.name)
             )
         }
+        val playersCount = playerSessions.count()
         broadcastMessage(
             JSONObject()
                 .put("eventType", "server_message")
-                .put("eventMessage", "players in game: ${playerSessions.map { it.id }}")
+                .put("eventMessage", "$playersCount players in game")
+        )
+        val message = if (playersCount == 1) "Waiting for opponent" else "Game has started"
+        broadcastMessage(
+            JSONObject()
+                .put("eventType", "server_message")
+                .put("eventMessage", message)
         )
     }
 
@@ -46,7 +53,7 @@ class Game {
 
     fun onFieldClicked(rowIndex: Int, colIndex: Int) {
         if (board.isFieldAvailable(rowIndex, colIndex)) {
-            println("clicked [row, col]: [$rowIndex, $colIndex]")
+            println("Clicked [row, col]: [$rowIndex, $colIndex]")
             val data = JSONObject()
                 .put("rowIndex", rowIndex)
                 .put("colIndex", colIndex)
@@ -68,7 +75,7 @@ class Game {
                     broadcastMessage(
                         JSONObject()
                             .put("eventType", "server_message")
-                            .put("eventMessage", "game ended: $resultMessage")
+                            .put("eventMessage", "Game has ended: $resultMessage")
                     )
                     broadcastMessage(
                         JSONObject()
@@ -88,11 +95,6 @@ class Game {
         }
         broadcastMessage(
             JSONObject()
-                .put("eventType", "server_message")
-                .put("eventMessage", "movement_allowed: " + currentPlayer.name)
-        )
-        broadcastMessage(
-            JSONObject()
                 .put("eventType", "movement_allowed")
                 .put("eventMessage", currentPlayer.name)
         )
@@ -109,12 +111,12 @@ class Game {
         broadcastMessage(
             JSONObject()
                 .put("eventType", "server_message")
-                .put("eventMessage", "player: ${session.id} disconnected")
+                .put("eventMessage", "Player disconnected")
         )
         broadcastMessage(
             JSONObject()
                 .put("eventType", "server_message")
-                .put("eventMessage", "players in game: ${playerSessions.map { it.id }}")
+                .put("eventMessage", "${playerSessions.count()} players in game")
         )
     }
 }
