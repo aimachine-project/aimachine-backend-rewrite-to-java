@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - checkout
-      - run: sh gradlew ktlintCheck
+      - run: gradle ktlintCheck
       - save_cache:
           paths:
             - ~/.gradle
@@ -62,7 +62,7 @@ jobs:
 
       - run:
           name: Load dependencies
-          command: sh gradlew dependencies
+          command: gradle dependencies
 
       - save_cache:
           name: Execute build script
@@ -91,7 +91,7 @@ jobs:
 
       - run:
           name: Run tests
-          command: sh gradlew test
+          command: gradle test
 
   Deploy to AWS:
     docker:
@@ -111,7 +111,7 @@ jobs:
 
       - run:
           name: Build Jar
-          command: sh gradlew bootJar
+          command: gradle bootJar
 
       - run:
           name: Build and push Backend Docker image
