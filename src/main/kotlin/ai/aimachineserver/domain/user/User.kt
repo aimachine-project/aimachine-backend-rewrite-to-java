@@ -21,7 +21,7 @@ class User(
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
