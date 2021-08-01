@@ -111,7 +111,7 @@ jobs:
 
       - run:
           name: Build Jar
-          command: gradle bootJar
+          command: sh gradlew bootJar
 
       - run:
           name: Build and push Backend Docker image
