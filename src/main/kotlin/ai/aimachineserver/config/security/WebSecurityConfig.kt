@@ -56,6 +56,9 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         return source
     }
 
+    @Autowired
+    private lateinit var authenticationEntryPoint: MyBasicAuthenticationEntryPoint
+
     override fun configure(http: HttpSecurity) {
         http
             .authorizeRequests()
@@ -63,7 +66,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers("/api/users/self").hasAnyRole("USER", "ADMIN")
             .antMatchers("/api/users/**").hasAnyRole("ADMIN")
             .antMatchers("/", "/**").permitAll()
-            .and().httpBasic()
+            .and().httpBasic().authenticationEntryPoint(authenticationEntryPoint)
             .and().cors().configurationSource(corsConfigurationSource())
             .and().csrf().disable()
             .formLogin().disable()
