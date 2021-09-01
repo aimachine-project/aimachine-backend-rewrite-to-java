@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse
 class MyBasicAuthenticationEntryPoint : AuthenticationEntryPoint {
 
     override fun commence(
-        request: HttpServletRequest?,
-        response: HttpServletResponse?,
-        authException: AuthenticationException?
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        authException: AuthenticationException
     ) {
-        response?.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException?.message)
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.message)
     }
 }
