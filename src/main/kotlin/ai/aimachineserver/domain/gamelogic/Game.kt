@@ -4,13 +4,14 @@ import org.json.JSONObject
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 
-class Game {
+class Game(
+    private var board: Board = Board(),
+    private val judge: Judge = Judge.makeJudgeForClassicGame()
+) {
     private companion object {
         val playerStub = PlayerHuman("", Symbol.SYMBOL_X)
     }
 
-    private var board = Board()
-    private val judge = Judge()
     private var player1 = playerStub
     private var player2 = playerStub
     private var currentPlayer = player1
