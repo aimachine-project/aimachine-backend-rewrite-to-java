@@ -1,16 +1,13 @@
 package ai.aimachineserver.domain.gamelogic
 
-import kotlin.math.abs
+import kotlin.math.absoluteValue
 
-class Judge private constructor(
-    private val minTurnsCount: Int,
-    private val maxTurnsCount: Int,
-    private val sameValuesCountWinningCondition: Int
+class Judge(
+    private val sameValuesCountWinningCondition: Int = 3,
+    boardSize: Int = 3
 ) {
-    companion object {
-        fun makeJudgeForClassicGame() = Judge(5, 9, 3)
-        fun makeJudgeFor14Fields() = Judge(9, 196, 5)
-    }
+    private val minTurnsCount = 2 * sameValuesCountWinningCondition - 1
+    private val maxTurnsCount = boardSize * boardSize
 
     fun announceTurnResult(board: Board, turnNumber: Int): TurnResult {
         val fieldValues = board.getAllFieldValues()
@@ -34,37 +31,54 @@ class Judge private constructor(
         else -> false
     }
 
-    private fun enoughAdjacentValuesInAnyRow(fieldValues: Array<IntArray>) =
-        fieldValues.any { row ->
-            row.mapIndexed { colIndex, _ ->
-                if (colIndex < row.size - sameValuesCountWinningCondition) {
-                    abs(
-                        row.copyOfRange(colIndex, colIndex + sameValuesCountWinningCondition - 1).sum()
-                    ) == sameValuesCountWinningCondition
-                } else {
-                    false
-                }
-            }.any { it }
-        }
+    private fun enoughAdjacentValuesInAnyRow(fieldValues: Array<IntArray>) = fieldValues.any { colValues ->
+        (0 until sameValuesCountWinningCondition).sumOf { colValues[it] }.absoluteValue == sameValuesCountWinningCondition
+    }
 
-    private fun enoughValuesInAnyColumn(fieldValues: Array<IntArray>) =
-        (fieldValues.first().indices).any { colIndex ->
-            abs(fieldValues.sumOf { rowValues -> rowValues[colIndex] }) == Board.DEFAULT_SIZE
+    private fun enoughValuesInAnyColumn(fieldValues: Array<IntArray>): Boolean {
+        val fieldValuesTransposed = transposeArray(fieldValues)
+        return enoughAdjacentValuesInAnyRow(fieldValuesTransposed)
+    }
+
+    private fun transposeArray(inputArray: Array<IntArray>): Array<IntArray> {
+        val outputArray = Array(inputArray.first().size) { IntArray(inputArray.size) }
+        for (i in 0..inputArray.lastIndex) {
+            for (j in 0..inputArray.first().lastIndex) {
+                outputArray[i][j] = inputArray[j][i]
+            }
         }
+        return outputArray
+    }
 
     private fun enoughValuesDiagonally(fieldValues: Array<IntArray>) = when {
-        enoughValuesMainDiagonals(fieldValues) -> true
-        enoughValuesAntiDiagonals(fieldValues) -> true
+        enoughValuesOnDiagonals(fieldValues) -> true
+        enoughValuesOnAntiDiagonals(fieldValues) -> true
         else -> false
     }
 
-    private fun enoughValuesMainDiagonals(fieldValues: Array<IntArray>) =
-        abs((fieldValues.indices).sumOf { rowIndex -> fieldValues[rowIndex][rowIndex] }) == Board.DEFAULT_SIZE
-
-    private fun enoughValuesAntiDiagonals(fieldValues: Array<IntArray>) =
-        abs(
-            (fieldValues.indices).sumOf { rowIndex ->
-                fieldValues[fieldValues.lastIndex - rowIndex][rowIndex]
+    private fun enoughValuesOnDiagonals(fieldValues: Array<IntArray>): Boolean {
+        for (i in 0..(fieldValues.size - sameValuesCountWinningCondition)) {
+            for (j in 0..(fieldValues.size - sameValuesCountWinningCondition)) {
+                if ((0 until sameValuesCountWinningCondition).sumOf {
+                        fieldValues[i + it][j + it]
+                    }.absoluteValue == sameValuesCountWinningCondition) {
+                    return true
+                }
             }
-        ) == Board.DEFAULT_SIZE
+        }
+        return false
+    }
+
+    private fun enoughValuesOnAntiDiagonals(fieldValues: Array<IntArray>): Boolean {
+        for (i in (sameValuesCountWinningCondition - 1)..(fieldValues.lastIndex)) {
+            for (j in (sameValuesCountWinningCondition - 1)..(fieldValues.lastIndex)) {
+                if ((0 until sameValuesCountWinningCondition).sumOf {
+                        fieldValues[sameValuesCountWinningCondition - 1 - it][j - (sameValuesCountWinningCondition - 1) + it]
+                    }.absoluteValue == sameValuesCountWinningCondition) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }

@@ -6,7 +6,7 @@ import org.springframework.web.socket.WebSocketSession
 
 class Game(
     private var board: Board = Board(),
-    private val judge: Judge = Judge.makeJudgeForClassicGame()
+    private val judge: Judge = Judge()
 ) {
     private companion object {
         val playerStub = PlayerHuman("", Symbol.SYMBOL_X)

@@ -55,4 +55,32 @@ class JudgeTest {
         val judge = Judge()
         assertThat(judge.announceTurnResult(board, 9)).isEqualTo(TurnResult.WIN)
     }
+
+    @Test
+    fun announceTurnResult_7x7_xBegins_diagonalX_returnsWin() {
+        val board = Board(7)
+        board.setFieldValue(0, 3, 1)
+        board.setFieldValue(1, 4, 1)
+        board.setFieldValue(2, 5, 1)
+        board.setFieldValue(3, 6, 1)
+        board.setFieldValue(0, 4, -1)
+        board.setFieldValue(0, 5, -1)
+        board.setFieldValue(0, 6, -1)
+        val judge = Judge(4,7)
+        assertThat(judge.announceTurnResult(board, 7)).isEqualTo(TurnResult.WIN)
+    }
+
+    @Test
+    fun announceTurnResult_6x6xBegins_orthogonalX_returnsWin() {
+        val board = Board(7)
+        board.setFieldValue(0, 3, 1)
+        board.setFieldValue(1, 4, 1)
+        board.setFieldValue(2, 5, 1)
+        board.setFieldValue(3, 6, 1)
+        board.setFieldValue(0, 4, -1)
+        board.setFieldValue(0, 5, -1)
+        board.setFieldValue(0, 6, -1)
+        val judge = Judge()
+        assertThat(judge.announceTurnResult(board, 7)).isEqualTo(TurnResult.WIN)
+    }
 }
