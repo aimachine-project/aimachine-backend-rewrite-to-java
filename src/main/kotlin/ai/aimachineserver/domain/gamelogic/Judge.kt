@@ -60,8 +60,9 @@ class Judge(
         for (i in 0..(fieldValues.size - sameValuesCountWinningCondition)) {
             for (j in 0..(fieldValues.size - sameValuesCountWinningCondition)) {
                 if ((0 until sameValuesCountWinningCondition).sumOf {
-                        fieldValues[i + it][j + it]
-                    }.absoluteValue == sameValuesCountWinningCondition) {
+                    fieldValues[i + it][j + it]
+                }.absoluteValue == sameValuesCountWinningCondition
+                ) {
                     return true
                 }
             }
@@ -73,8 +74,9 @@ class Judge(
         for (i in (sameValuesCountWinningCondition - 1)..(fieldValues.lastIndex)) {
             for (j in (sameValuesCountWinningCondition - 1)..(fieldValues.lastIndex)) {
                 if ((0 until sameValuesCountWinningCondition).sumOf {
-                        fieldValues[sameValuesCountWinningCondition - 1 - it][j - (sameValuesCountWinningCondition - 1) + it]
-                    }.absoluteValue == sameValuesCountWinningCondition) {
+                    fieldValues[sameValuesCountWinningCondition - 1 - it][j - (sameValuesCountWinningCondition - 1) + it]
+                }.absoluteValue == sameValuesCountWinningCondition
+                ) {
                     return true
                 }
             }

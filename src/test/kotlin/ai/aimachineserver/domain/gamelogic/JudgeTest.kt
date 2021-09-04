@@ -66,7 +66,7 @@ class JudgeTest {
         board.setFieldValue(0, 4, -1)
         board.setFieldValue(0, 5, -1)
         board.setFieldValue(0, 6, -1)
-        val judge = Judge(4,7)
+        val judge = Judge(4, 7)
         assertThat(judge.announceTurnResult(board, 7)).isEqualTo(TurnResult.WIN)
     }
 

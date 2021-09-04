@@ -1,5 +1,7 @@
 package ai.aimachineserver.config.websocket
 
+import ai.aimachineserver.application.GameFactoryClassicTicTacToe
+import ai.aimachineserver.application.GameFactoryTicTacToeNFields
 import ai.aimachineserver.application.WebSocketServerHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -12,11 +14,17 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 class WebSocketConfig : WebSocketConfigurer {
     override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
-        registry.addHandler(webSocketServerHandler(), "/games/tictactoe").setAllowedOrigins("*")
+        registry.addHandler(webSocketServerHandlerClassicTicTacToe(), "/games/tictactoe").setAllowedOrigins("*")
+        registry.addHandler(webSocketServerHandlerTicTacToeNFields(), "/games/tictactoenfields").setAllowedOrigins("*")
     }
 
     @Bean
-    fun webSocketServerHandler(): WebSocketHandler {
-        return WebSocketServerHandler()
+    fun webSocketServerHandlerClassicTicTacToe(): WebSocketHandler {
+        return WebSocketServerHandler(GameFactoryClassicTicTacToe())
+    }
+
+    @Bean
+    fun webSocketServerHandlerTicTacToeNFields(): WebSocketHandler {
+        return WebSocketServerHandler(GameFactoryTicTacToeNFields())
     }
 }
