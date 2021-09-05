@@ -1,15 +1,15 @@
-package ai.aimachineserver.domain.gamelogic
+package ai.aimachineserver.domain.games.tictactie
 
 import kotlin.math.absoluteValue
 
 class Judge(
-    private val sameValuesCountWinningCondition: Int = 3,
-    boardSize: Int = 3
+    private val board: Board,
+    private val sameValuesCountWinningCondition: Int = 3
 ) {
     private val minTurnsCount = 2 * sameValuesCountWinningCondition - 1
-    private val maxTurnsCount = boardSize * boardSize
+    private val maxTurnsCount = board.size * board.size
 
-    fun announceTurnResult(board: Board, turnNumber: Int): TurnResult {
+    fun announceTurnResult(turnNumber: Int): TurnResult {
         val fieldValues = board.getAllFieldValues()
         return when {
             turnNumber < minTurnsCount -> TurnResult.GAME_ONGOING
@@ -60,8 +60,9 @@ class Judge(
         for (i in 0..(fieldValues.size - sameValuesCountWinningCondition)) {
             for (j in 0..(fieldValues.size - sameValuesCountWinningCondition)) {
                 if ((0 until sameValuesCountWinningCondition).sumOf {
-                        fieldValues[i + it][j + it]
-                    }.absoluteValue == sameValuesCountWinningCondition) {
+                    fieldValues[i + it][j + it]
+                }.absoluteValue == sameValuesCountWinningCondition
+                ) {
                     return true
                 }
             }
@@ -73,8 +74,9 @@ class Judge(
         for (i in (sameValuesCountWinningCondition - 1)..(fieldValues.lastIndex)) {
             for (j in (sameValuesCountWinningCondition - 1)..(fieldValues.lastIndex)) {
                 if ((0 until sameValuesCountWinningCondition).sumOf {
-                        fieldValues[sameValuesCountWinningCondition - 1 - it][j - (sameValuesCountWinningCondition - 1) + it]
-                    }.absoluteValue == sameValuesCountWinningCondition) {
+                    fieldValues[sameValuesCountWinningCondition - 1 - it][j - (sameValuesCountWinningCondition - 1) + it]
+                }.absoluteValue == sameValuesCountWinningCondition
+                ) {
                     return true
                 }
             }

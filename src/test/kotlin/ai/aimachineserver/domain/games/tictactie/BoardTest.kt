@@ -1,4 +1,4 @@
-package ai.aimachineserver.domain.gamelogic
+package ai.aimachineserver.domain.games.tictactie
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest(classes = [Board::class])
 class BoardTest {
 
-    private val emptyBoardFields = Array(3) { IntArray(3) { 0 } }
+    private val emptyBoardFields = Array(3) { IntArray(3) { Board.EMPTY_FIELD_VALUE } }
 
     @Test
     fun init_noValuePassed_allFieldsEmpty() {

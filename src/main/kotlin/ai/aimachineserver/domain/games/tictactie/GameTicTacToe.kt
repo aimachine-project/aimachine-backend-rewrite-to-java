@@ -1,12 +1,12 @@
-package ai.aimachineserver.domain.gamelogic
+package ai.aimachineserver.domain.games.tictactie
 
 import org.json.JSONObject
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 
-class Game(
-    private var board: Board = Board(),
-    private val judge: Judge = Judge()
+class GameTicTacToe(
+    private val board: Board = Board(),
+    private val judge: Judge = Judge(board)
 ) {
     private companion object {
         val playerStub = PlayerHuman("", Symbol.SYMBOL_X)
@@ -67,8 +67,8 @@ class Game(
             )
             if (turnResult == TurnResult.GAME_ONGOING) {
                 turnNumber++
-                board = currentPlayer.makeMove(board, rowIndex, colIndex)
-                turnResult = judge.announceTurnResult(board, turnNumber)
+                currentPlayer.makeMove(board, rowIndex, colIndex)
+                turnResult = judge.announceTurnResult(turnNumber)
                 if (turnResult == TurnResult.GAME_ONGOING) {
                     changePlayer()
                 } else {

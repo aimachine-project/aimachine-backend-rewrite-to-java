@@ -1,6 +1,6 @@
 package ai.aimachineserver.application
 
-import ai.aimachineserver.domain.gamelogic.Game
+import ai.aimachineserver.domain.games.tictactie.GameTicTacToe
 import org.json.JSONObject
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -9,7 +9,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 
 class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSocketHandler() {
 
-    private val games = mutableMapOf<String, Game>()
+    private val games = mutableMapOf<String, GameTicTacToe>()
     private var roomsCounter = 1
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
