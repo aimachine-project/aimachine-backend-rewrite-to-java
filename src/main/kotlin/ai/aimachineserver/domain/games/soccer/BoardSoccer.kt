@@ -1,7 +1,6 @@
 package ai.aimachineserver.domain.games.soccer
 
 import ai.aimachineserver.domain.games.soccer.NodeLink.*
-import java.util.*
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -115,60 +114,55 @@ class BoardSoccer {
         val rowIndex: Int,
         val colIndex: Int
     ) {
-        private val links = mutableMapOf<NodeLink, Boolean>()
+        private val maxLinksCount = NodeLink.values().count()
+        private val links = mutableSetOf<NodeLink>()
 
-        init {
-            NodeLink.values().forEach {
-                links[it] = false
-            }
-        }
-
-        fun hasLink(link: NodeLink) = links.getValue(link)
-        fun hasAnyFreeLink() = links.values.any { !it }
-        fun hasMoreThanOneLink() = links.values.count { it } > 1
-        fun hasOnlyOneLink() = links.values.count { it } == 1
+        fun hasLink(link: NodeLink) = links.contains(link)
+        fun hasAnyFreeLink() = links.count() < maxLinksCount
+        fun hasMoreThanOneLink() = links.count() > 1
+        fun hasOnlyOneLink() = links.count() == 1
 
         fun makeLink(link: NodeLink) {
             when (link) {
                 LINK_TOP -> {
-                    links[LINK_TOP] = true
+                    links.add(LINK_TOP)
                     currentNode = nodes[currentNode.rowIndex - 1][currentNode.colIndex]
-                    currentNode.links[LINK_BOTTOM] = true
+                    currentNode.links.add(LINK_BOTTOM)
                 }
                 LINK_TOP_RIGHT -> {
-                    links[LINK_TOP_RIGHT] = true
+                    links.add(LINK_TOP_RIGHT)
                     currentNode = nodes[currentNode.rowIndex - 1][currentNode.colIndex + 1]
-                    currentNode.links[LINK_BOTTOM_LEFT] = true
+                    currentNode.links.add(LINK_BOTTOM_LEFT)
                 }
                 LINK_RIGHT -> {
-                    links[LINK_RIGHT] = true
+                    links.add(LINK_RIGHT)
                     currentNode = nodes[currentNode.rowIndex][currentNode.colIndex + 1]
-                    currentNode.links[LINK_LEFT] = true
+                    currentNode.links.add(LINK_LEFT)
                 }
                 LINK_BOTTOM_RIGHT -> {
-                    links[LINK_BOTTOM_RIGHT] = true
+                    links.add(LINK_BOTTOM_RIGHT)
                     currentNode = nodes[currentNode.rowIndex + 1][currentNode.colIndex + 1]
-                    currentNode.links[LINK_TOP_LEFT] = true
+                    currentNode.links.add(LINK_TOP_LEFT)
                 }
                 LINK_BOTTOM -> {
-                    links[LINK_BOTTOM] = true
+                    links.add(LINK_BOTTOM)
                     currentNode = nodes[currentNode.rowIndex + 1][currentNode.colIndex]
-                    currentNode.links[LINK_TOP] = true
+                    currentNode.links.add(LINK_TOP)
                 }
                 LINK_BOTTOM_LEFT -> {
-                    links[LINK_BOTTOM_LEFT] = true
+                    links.add(LINK_BOTTOM_LEFT)
                     currentNode = nodes[currentNode.rowIndex + 1][currentNode.colIndex - 1]
-                    currentNode.links[LINK_TOP_RIGHT] = true
+                    currentNode.links.add(LINK_TOP_RIGHT)
                 }
                 LINK_LEFT -> {
-                    links[LINK_LEFT] = true
+                    links.add(LINK_LEFT)
                     currentNode = nodes[currentNode.rowIndex][currentNode.colIndex - 1]
-                    currentNode.links[LINK_RIGHT] = true
+                    currentNode.links.add(LINK_RIGHT)
                 }
                 LINK_TOP_LEFT -> {
-                    links[LINK_TOP_LEFT] = true
+                    links.add(LINK_TOP_LEFT)
                     currentNode = nodes[currentNode.rowIndex - 1][currentNode.colIndex - 1]
-                    currentNode.links[LINK_BOTTOM_RIGHT] = true
+                    currentNode.links.add(LINK_BOTTOM_RIGHT)
                 }
             }
         }
