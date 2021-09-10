@@ -1,23 +1,22 @@
-package ai.aimachineserver.domain.games.tictactie
+package ai.aimachineserver.domain.games.soccer
 
 import ai.aimachineserver.domain.games.Game
 import org.json.JSONObject
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 
-class GameTicTacToe(
-    private val board: Board = Board(),
-    private val judge: Judge = Judge(board)
+class GameSoccer(
+    private val board: BoardSoccer = BoardSoccer(),
+    private val judge: JudgeSoccer = JudgeSoccer(board)
 ) : Game {
     private companion object {
-        val playerStub = PlayerHuman("", Symbol.SYMBOL_X)
+        val playerStub = PlayerSoccerHuman("")
     }
 
     private var player1 = playerStub
     private var player2 = playerStub
     private var currentPlayer = player1
-    private var turnResult = TurnResult.GAME_ONGOING
-    private var turnNumber = 0
+    private var turnResult = TurnResultSoccer.TURN_ONGOING
     private val playerSessions = mutableListOf<WebSocketSession>()
 
     override fun getPlayerSessions() = playerSessions
@@ -25,10 +24,10 @@ class GameTicTacToe(
     override fun onPlayerJoinedGame(session: WebSocketSession) {
         playerSessions.add(session)
         if (player1 == playerStub) {
-            player1 = PlayerHuman(session.id, Symbol.SYMBOL_O)
+            player1 = PlayerSoccerHuman(session.id)
             currentPlayer = player1
         } else {
-            player2 = PlayerHuman(session.id, Symbol.SYMBOL_X)
+            player2 = PlayerSoccerHuman(session.id)
             broadcastMessage(
                 JSONObject()
                     .put("eventType", "movement_allowed")
@@ -61,21 +60,19 @@ class GameTicTacToe(
             val data = JSONObject()
                 .put("rowIndex", rowIndex)
                 .put("colIndex", colIndex)
-                .put("fieldToken", currentPlayer.symbol.token)
                 .toString()
             broadcastMessage(
                 JSONObject()
                     .put("eventType", "field_to_be_marked")
                     .put("eventMessage", data)
             )
-            if (turnResult == TurnResult.GAME_ONGOING) {
-                turnNumber++
+            if (turnResult == TurnResultSoccer.TURN_ONGOING || turnResult == TurnResultSoccer.TURN_OVER) {
                 currentPlayer.makeMove(board, rowIndex, colIndex)
-                turnResult = judge.announceTurnResult(turnNumber)
-                if (turnResult == TurnResult.GAME_ONGOING) {
-                    changePlayer()
+                turnResult = judge.announceTurnResult()
+                if (turnResult == TurnResultSoccer.TURN_OVER) {
+                    currentPlayer = assignPlayer()
                 } else {
-                    val resultMessage = getResultMessage()
+                    val resultMessage = getEndgameMessage()
                     broadcastMessage(
                         JSONObject()
                             .put("eventType", "server_message")
@@ -86,29 +83,30 @@ class GameTicTacToe(
                             .put("eventType", "movement_allowed")
                             .put("eventMessage", "none")
                     )
+                    return
                 }
+                broadcastMessage(
+                    JSONObject()
+                        .put("eventType", "movement_allowed")
+                        .put("eventMessage", currentPlayer.name)
+                )
             }
         }
     }
 
-    private fun changePlayer() {
-        currentPlayer = if (currentPlayer == player1) {
-            player2
-        } else {
-            player1
-        }
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "movement_allowed")
-                .put("eventMessage", currentPlayer.name)
-        )
+    private fun assignPlayer() = if (currentPlayer == player1) {
+        player2
+    } else {
+        player1
     }
 
-    private fun getResultMessage() = if (turnResult == TurnResult.TIE) {
-        "Tie"
-    } else {
-        "${currentPlayer.symbol.identifier} won"
+    private fun getEndgameMessage() = when (turnResult) {
+        TurnResultSoccer.WIN -> formatMessage(currentPlayer == player1)
+        TurnResultSoccer.LOSE -> formatMessage(currentPlayer != player1)
+        else -> "Unexpected state, everyone is a winner"
     }
+
+    private fun formatMessage(condition: Boolean) = "${if (condition) player1.name else player2.name} won"
 
     override fun onDisconnect(session: WebSocketSession) {
         playerSessions.remove(session)

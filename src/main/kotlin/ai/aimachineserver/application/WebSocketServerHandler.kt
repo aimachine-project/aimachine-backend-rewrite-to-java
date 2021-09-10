@@ -1,6 +1,6 @@
 package ai.aimachineserver.application
 
-import ai.aimachineserver.domain.games.tictactie.GameTicTacToe
+import ai.aimachineserver.domain.games.Game
 import org.json.JSONObject
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -9,7 +9,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 
 class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSocketHandler() {
 
-    private val games = mutableMapOf<String, GameTicTacToe>()
+    private val games = mutableMapOf<String, Game>()
     private var roomsCounter = 1
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
@@ -56,7 +56,7 @@ class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSock
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         println("Client ${session.id} disconnected")
-        val gameId = games.entries.find { it.value.playerSessions.contains(session) }?.key
+        val gameId = games.entries.find { it.value.getPlayerSessions().contains(session) }?.key
         if (gameId != null) {
             val game = games.getValue(gameId)
             game.onDisconnect(session)

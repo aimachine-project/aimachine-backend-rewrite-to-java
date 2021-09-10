@@ -31,8 +31,18 @@ class Judge(
         else -> false
     }
 
-    private fun enoughAdjacentValuesInAnyRow(fieldValues: Array<IntArray>) = fieldValues.any { colValues ->
-        (0 until sameValuesCountWinningCondition).sumOf { colValues[it] }.absoluteValue == sameValuesCountWinningCondition
+    private fun enoughAdjacentValuesInAnyRow(fieldValues: Array<IntArray>): Boolean {
+        fieldValues.forEach { colValues ->
+            colValues.dropLast(fieldValues.size - sameValuesCountWinningCondition).forEachIndexed { j, _ ->
+                if ((j until j + sameValuesCountWinningCondition).sumOf {
+                    colValues[it]
+                }.absoluteValue == sameValuesCountWinningCondition
+                ) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     private fun enoughValuesInAnyColumn(fieldValues: Array<IntArray>): Boolean {
@@ -71,10 +81,10 @@ class Judge(
     }
 
     private fun enoughValuesOnAntiDiagonals(fieldValues: Array<IntArray>): Boolean {
-        for (i in (sameValuesCountWinningCondition - 1)..(fieldValues.lastIndex)) {
-            for (j in (sameValuesCountWinningCondition - 1)..(fieldValues.lastIndex)) {
+        for (i in (sameValuesCountWinningCondition - 1)..fieldValues.lastIndex) {
+            for (j in 0..(fieldValues.size - sameValuesCountWinningCondition)) {
                 if ((0 until sameValuesCountWinningCondition).sumOf {
-                    fieldValues[sameValuesCountWinningCondition - 1 - it][j - (sameValuesCountWinningCondition - 1) + it]
+                    fieldValues[i - it][j + it]
                 }.absoluteValue == sameValuesCountWinningCondition
                 ) {
                     return true

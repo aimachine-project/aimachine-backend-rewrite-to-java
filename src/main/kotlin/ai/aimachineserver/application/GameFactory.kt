@@ -1,11 +1,15 @@
 package ai.aimachineserver.application
 
+import ai.aimachineserver.domain.games.Game
+import ai.aimachineserver.domain.games.soccer.BoardSoccer
+import ai.aimachineserver.domain.games.soccer.GameSoccer
+import ai.aimachineserver.domain.games.soccer.JudgeSoccer
 import ai.aimachineserver.domain.games.tictactie.Board
 import ai.aimachineserver.domain.games.tictactie.GameTicTacToe
 import ai.aimachineserver.domain.games.tictactie.Judge
 
 interface GameFactory {
-    fun createGame(): GameTicTacToe
+    fun createGame(): Game
 }
 
 class GameFactoryClassicTicTacToe : GameFactory {
@@ -13,7 +17,7 @@ class GameFactoryClassicTicTacToe : GameFactory {
 }
 
 class GameFactoryTicTacToeNFields : GameFactory {
-    override fun createGame(): GameTicTacToe {
+    override fun createGame(): Game {
         val board = Board(14)
         val judge = Judge(board, 5)
         return GameTicTacToe(board, judge)
@@ -21,9 +25,9 @@ class GameFactoryTicTacToeNFields : GameFactory {
 }
 
 class GameFactorySoccer : GameFactory {
-    override fun createGame(): GameTicTacToe {
-        val board = Board(14)
-        val judge = Judge(board, 5)
-        return GameTicTacToe(board, judge)
+    override fun createGame(): Game {
+        val board = BoardSoccer()
+        val judge = JudgeSoccer(board)
+        return GameSoccer(board, judge)
     }
 }
