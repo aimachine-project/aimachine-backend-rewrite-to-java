@@ -33,7 +33,7 @@ class Judge(
 
     private fun enoughAdjacentValuesInAnyRow(fieldValues: Array<IntArray>): Boolean {
         fieldValues.forEach { colValues ->
-            colValues.dropLast(fieldValues.size - sameValuesCountWinningCondition).forEachIndexed { j, _ ->
+            colValues.dropLast(sameValuesCountWinningCondition - 1).forEachIndexed { j, _ ->
                 if ((j until j + sameValuesCountWinningCondition).sumOf {
                     colValues[it]
                 }.absoluteValue == sameValuesCountWinningCondition
