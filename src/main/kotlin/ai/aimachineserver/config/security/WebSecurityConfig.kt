@@ -1,7 +1,6 @@
 package ai.aimachineserver.config.security
 
-import ai.aimachineserver.application.UserDetailsServiceImpl
-import ai.aimachineserver.web.LoginEndpoint
+import ai.aimachineserver.application.CustomUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,7 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(
-    private val userDetailsService: UserDetailsServiceImpl
+    private val userDetailsService: CustomUserDetailsService
 ) : WebSecurityConfigurerAdapter() {
 
     @Bean
