@@ -57,7 +57,7 @@ class JudgeTest {
     }
 
     @Test
-    fun announceTurnResult_7x7_xBegins_diagonalX_returnsWin() {
+    fun announceTurnResult_7x7_diagonalConditionMet_returnsWin() {
         val board = Board(7)
         board.setFieldValue(0, 3, 1)
         board.setFieldValue(1, 4, 1)
@@ -66,21 +66,53 @@ class JudgeTest {
         board.setFieldValue(0, 4, -1)
         board.setFieldValue(0, 5, -1)
         board.setFieldValue(0, 6, -1)
-        val judge = Judge(4, 7)
+        val judge = Judge(4)
         assertThat(judge.announceTurnResult(board, 7)).isEqualTo(TurnResult.WIN)
     }
 
     @Test
-    fun announceTurnResult_6x6xBegins_orthogonalX_returnsWin() {
+    fun announceTurnResult_7x7_rowConditionMet_returnsWin() {
         val board = Board(7)
-        board.setFieldValue(0, 3, 1)
-        board.setFieldValue(1, 4, 1)
+        board.setFieldValue(6, 2, 1)
+        board.setFieldValue(6, 3, -1)
+        board.setFieldValue(6, 4, -1)
+        board.setFieldValue(6, 5, -1)
+        board.setFieldValue(6, 6, -1)
+        board.setFieldValue(0, 5, 1)
+        board.setFieldValue(0, 6, 1)
+        val judge = Judge(4)
+        assertThat(judge.announceTurnResult(board, 7)).isEqualTo(TurnResult.WIN)
+    }
+
+    @Test
+    fun announceTurnResult_14x14_diagonalsConditionMet_returnsWin() {
+        val board = Board(14)
+        board.setFieldValue(6, 2, -1)
+        board.setFieldValue(7, 3, -1)
+        board.setFieldValue(8, 4, -1)
+        board.setFieldValue(9, 5, -1)
+        board.setFieldValue(10, 6, -1)
         board.setFieldValue(2, 5, 1)
+        board.setFieldValue(3, 6, -1)
+        board.setFieldValue(0, 5, 1)
+        board.setFieldValue(0, 6, 1)
+        val judge = Judge(5)
+        assertThat(judge.announceTurnResult(board, 9)).isEqualTo(TurnResult.WIN)
+    }
+
+    @Test
+    fun announceTurnResult_14x14_antiDiagonalsConditionMet_returnsWin() {
+        val board = Board(14)
+        board.setFieldValue(6, 6, 1)
+        board.setFieldValue(7, 5, 1)
+        board.setFieldValue(8, 4, 1)
+        board.setFieldValue(9, 3, 1)
+        board.setFieldValue(10, 2, 1)
+        board.setFieldValue(2, 5, -1)
         board.setFieldValue(3, 6, 1)
-        board.setFieldValue(0, 4, -1)
         board.setFieldValue(0, 5, -1)
         board.setFieldValue(0, 6, -1)
-        val judge = Judge()
-        assertThat(judge.announceTurnResult(board, 7)).isEqualTo(TurnResult.WIN)
+        val judge = Judge(5)
+        assertThat(judge.announceTurnResult(board, 9)).isEqualTo(TurnResult.WIN)
     }
 }
