@@ -1,7 +1,7 @@
 package ai.aimachineserver.config.security
 
 import ai.aimachineserver.application.UserDetailsServiceImpl
-import ai.aimachineserver.domain.user.UserRepository
+import ai.aimachineserver.web.LoginEndpoint
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,28 +18,23 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-class WebSecurityConfig : WebSecurityConfigurerAdapter() {
-
-    @Autowired
-    private lateinit var userRepository: UserRepository
-
-    @Bean
-    override fun userDetailsService() = UserDetailsServiceImpl(userRepository)
+class WebSecurityConfig(
+    private val userDetailsService: UserDetailsServiceImpl
+) : WebSecurityConfigurerAdapter() {
 
     @Bean
-    fun encoder() = BCryptPasswordEncoder()
+    fun passwordEncoder() = BCryptPasswordEncoder()
 
     @Bean
     fun authenticationProvider(): DaoAuthenticationProvider {
         val authProvider = DaoAuthenticationProvider()
-        authProvider.setUserDetailsService(userDetailsService())
-        authProvider.setPasswordEncoder(encoder())
+        authProvider.setUserDetailsService(userDetailsService)
+        authProvider.setPasswordEncoder(passwordEncoder())
         return authProvider
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth
-            .authenticationProvider(authenticationProvider())
+        auth.authenticationProvider(authenticationProvider())
     }
 
     @Bean
@@ -66,6 +61,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers("/api/users/create").permitAll()
             .antMatchers("/api/users/self").hasAnyRole("USER", "ADMIN")
             .antMatchers("/api/users/**").hasAnyRole("ADMIN")
+            .antMatchers("/api/login").hasAnyRole("USER", "ADMIN")
             .antMatchers("/", "/**").permitAll()
             .and().httpBasic().authenticationEntryPoint(authenticationEntryPoint)
             .and().cors().configurationSource(corsConfigurationSource())
@@ -73,6 +69,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .formLogin().disable()
             .logout()
             .logoutUrl("/api/logout")
-            .logoutSuccessUrl("/")
+            .logoutSuccessUrl("/api")
     }
 }
