@@ -4,9 +4,9 @@ import ai.aimachineserver.domain.games.Game
 import ai.aimachineserver.domain.games.soccer.BoardSoccer
 import ai.aimachineserver.domain.games.soccer.GameSoccer
 import ai.aimachineserver.domain.games.soccer.JudgeSoccer
-import ai.aimachineserver.domain.games.tictactie.Board
-import ai.aimachineserver.domain.games.tictactie.GameTicTacToe
-import ai.aimachineserver.domain.games.tictactie.Judge
+import ai.aimachineserver.domain.games.tictactoe.Board
+import ai.aimachineserver.domain.games.tictactoe.GameTicTacToe
+import ai.aimachineserver.domain.games.tictactoe.Judge
 
 interface GameFactory {
     fun createGame(): Game

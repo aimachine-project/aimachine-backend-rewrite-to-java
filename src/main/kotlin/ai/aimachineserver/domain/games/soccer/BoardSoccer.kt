@@ -12,6 +12,7 @@ class BoardSoccer {
         const val LAST_ROW_INDEX = BOARD_HEIGHT - 1
         const val LAST_COL_INDEX = BOARD_WIDTH - 1
         val middleColIndex = (BOARD_WIDTH / 2.0).roundToInt()
+        val middleRowIndex = (BOARD_HEIGHT / 2.0).roundToInt()
         val gateHalfWidth = (GATE_WIDTH / 2.0).roundToInt()
     }
 
@@ -19,15 +20,15 @@ class BoardSoccer {
         Array(BOARD_WIDTH) { colIndex -> Node(rowIndex, colIndex) }
     }
 
-    private var currentNode: Node
+    private var currentNode = nodes[middleRowIndex][middleColIndex]
 
     init {
         // link gate rear borders
         (0 until gateHalfWidth).forEach {
             nodes[0][middleColIndex - it].makeLink(LINK_LEFT)
             nodes[0][middleColIndex + it].makeLink(LINK_RIGHT)
-            nodes[0][middleColIndex - it].makeLink(LINK_LEFT)
-            nodes[0][middleColIndex + it].makeLink(LINK_RIGHT)
+            nodes[LAST_COL_INDEX][middleColIndex - it].makeLink(LINK_LEFT)
+            nodes[LAST_COL_INDEX][middleColIndex + it].makeLink(LINK_RIGHT)
         }
         // link gate skews
         nodes[1][middleColIndex - gateHalfWidth].makeLink(LINK_TOP_LEFT)
@@ -86,7 +87,7 @@ class BoardSoccer {
             bottomRightNode.makeLink(LINK_LEFT)
         }
 
-        currentNode = nodes[(BOARD_HEIGHT / 2.0).roundToInt()][middleColIndex]
+        currentNode = nodes[middleRowIndex][middleColIndex]
     }
 
     fun getCurrentNode() = currentNode
@@ -106,7 +107,7 @@ class BoardSoccer {
 
     fun makeLink(link: NodeLink) {
         if (!currentNode.hasLink(link)) {
-            currentNode.makeLink(link)
+            currentNode = currentNode.makeLink(link)
         }
     }
 
@@ -122,48 +123,46 @@ class BoardSoccer {
         fun hasMoreThanOneLink() = links.count() > 1
         fun hasOnlyOneLink() = links.count() == 1
 
-        fun makeLink(link: NodeLink) {
-            when (link) {
-                LINK_TOP -> {
-                    links.add(LINK_TOP)
-                    currentNode = nodes[currentNode.rowIndex - 1][currentNode.colIndex]
-                    currentNode.links.add(LINK_BOTTOM)
-                }
-                LINK_TOP_RIGHT -> {
-                    links.add(LINK_TOP_RIGHT)
-                    currentNode = nodes[currentNode.rowIndex - 1][currentNode.colIndex + 1]
-                    currentNode.links.add(LINK_BOTTOM_LEFT)
-                }
-                LINK_RIGHT -> {
-                    links.add(LINK_RIGHT)
-                    currentNode = nodes[currentNode.rowIndex][currentNode.colIndex + 1]
-                    currentNode.links.add(LINK_LEFT)
-                }
-                LINK_BOTTOM_RIGHT -> {
-                    links.add(LINK_BOTTOM_RIGHT)
-                    currentNode = nodes[currentNode.rowIndex + 1][currentNode.colIndex + 1]
-                    currentNode.links.add(LINK_TOP_LEFT)
-                }
-                LINK_BOTTOM -> {
-                    links.add(LINK_BOTTOM)
-                    currentNode = nodes[currentNode.rowIndex + 1][currentNode.colIndex]
-                    currentNode.links.add(LINK_TOP)
-                }
-                LINK_BOTTOM_LEFT -> {
-                    links.add(LINK_BOTTOM_LEFT)
-                    currentNode = nodes[currentNode.rowIndex + 1][currentNode.colIndex - 1]
-                    currentNode.links.add(LINK_TOP_RIGHT)
-                }
-                LINK_LEFT -> {
-                    links.add(LINK_LEFT)
-                    currentNode = nodes[currentNode.rowIndex][currentNode.colIndex - 1]
-                    currentNode.links.add(LINK_RIGHT)
-                }
-                LINK_TOP_LEFT -> {
-                    links.add(LINK_TOP_LEFT)
-                    currentNode = nodes[currentNode.rowIndex - 1][currentNode.colIndex - 1]
-                    currentNode.links.add(LINK_BOTTOM_RIGHT)
-                }
+        fun makeLink(link: NodeLink): Node = when (link) {
+            LINK_TOP -> {
+                links.add(LINK_TOP)
+                val linkedNode = nodes[currentNode.rowIndex - 1][currentNode.colIndex]
+                linkedNode.apply { links.add(LINK_BOTTOM) }
+            }
+            LINK_TOP_RIGHT -> {
+                links.add(LINK_TOP_RIGHT)
+                val linkedNode = nodes[currentNode.rowIndex - 1][currentNode.colIndex + 1]
+                linkedNode.apply { links.add(LINK_BOTTOM_LEFT) }
+            }
+            LINK_RIGHT -> {
+                links.add(LINK_RIGHT)
+                val linkedNode = nodes[currentNode.rowIndex][currentNode.colIndex + 1]
+                linkedNode.apply { links.add(LINK_LEFT) }
+            }
+            LINK_BOTTOM_RIGHT -> {
+                links.add(LINK_BOTTOM_RIGHT)
+                val linkedNode = nodes[currentNode.rowIndex + 1][currentNode.colIndex + 1]
+                linkedNode.apply { links.add(LINK_TOP_LEFT) }
+            }
+            LINK_BOTTOM -> {
+                links.add(LINK_BOTTOM)
+                val linkedNode = nodes[currentNode.rowIndex + 1][currentNode.colIndex]
+                linkedNode.apply { links.add(LINK_TOP) }
+            }
+            LINK_BOTTOM_LEFT -> {
+                links.add(LINK_BOTTOM_LEFT)
+                val linkedNode = nodes[currentNode.rowIndex + 1][currentNode.colIndex - 1]
+                linkedNode.apply { links.add(LINK_TOP_RIGHT) }
+            }
+            LINK_LEFT -> {
+                links.add(LINK_LEFT)
+                val linkedNode = nodes[currentNode.rowIndex][currentNode.colIndex - 1]
+                linkedNode.apply { links.add(LINK_RIGHT) }
+            }
+            LINK_TOP_LEFT -> {
+                links.add(LINK_TOP_LEFT)
+                val linkedNode = nodes[currentNode.rowIndex - 1][currentNode.colIndex - 1]
+                linkedNode.apply { links.add(LINK_BOTTOM_RIGHT) }
             }
         }
     }

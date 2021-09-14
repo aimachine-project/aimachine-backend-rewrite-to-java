@@ -1,10 +1,8 @@
-package ai.aimachineserver.domain.games.tictactie
+package ai.aimachineserver.domain.games.tictactoe
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(classes = [Judge::class, Board::class])
 class JudgeTest {
 
     @Test

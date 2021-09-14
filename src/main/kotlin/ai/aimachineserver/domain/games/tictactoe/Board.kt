@@ -1,4 +1,4 @@
-package ai.aimachineserver.domain.games.tictactie
+package ai.aimachineserver.domain.games.tictactoe
 
 class Board(val size: Int = DEFAULT_SIZE) {
 

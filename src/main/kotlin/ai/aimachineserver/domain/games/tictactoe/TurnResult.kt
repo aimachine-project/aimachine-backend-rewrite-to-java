@@ -1,4 +1,4 @@
-package ai.aimachineserver.domain.games.tictactie
+package ai.aimachineserver.domain.games.tictactoe
 
 enum class TurnResult {
     GAME_ONGOING,

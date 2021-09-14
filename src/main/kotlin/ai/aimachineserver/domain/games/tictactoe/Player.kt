@@ -1,4 +1,4 @@
-package ai.aimachineserver.domain.games.tictactie
+package ai.aimachineserver.domain.games.tictactoe
 
 abstract class Player(
     val name: String,
