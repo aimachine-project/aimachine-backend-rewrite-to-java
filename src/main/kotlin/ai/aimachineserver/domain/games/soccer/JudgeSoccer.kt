@@ -6,9 +6,9 @@ class JudgeSoccer(private val board: BoardSoccer) {
         0 to BoardSoccer.middleColIndex - 1,
         0 to BoardSoccer.middleColIndex,
         0 to BoardSoccer.middleColIndex + 1,
-        BoardSoccer.LAST_ROW_INDEX to BoardSoccer.middleColIndex - 1,
-        BoardSoccer.LAST_ROW_INDEX to BoardSoccer.middleColIndex,
-        BoardSoccer.LAST_ROW_INDEX to BoardSoccer.middleColIndex + 1,
+        BoardSoccer.BOARD_HEIGHT to BoardSoccer.middleColIndex - 1,
+        BoardSoccer.BOARD_HEIGHT to BoardSoccer.middleColIndex,
+        BoardSoccer.BOARD_HEIGHT to BoardSoccer.middleColIndex + 1,
     )
 
     fun announceTurnResult(): TurnResultSoccer {
