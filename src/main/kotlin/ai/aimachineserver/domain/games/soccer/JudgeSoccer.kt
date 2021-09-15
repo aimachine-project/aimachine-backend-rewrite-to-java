@@ -14,10 +14,10 @@ class JudgeSoccer(private val board: BoardSoccer) {
     fun announceTurnResult(): TurnResultSoccer {
         val currentNode = board.getCurrentNode()
         return when {
+            winningNodes.contains(currentNode.rowIndex to currentNode.colIndex) -> TurnResultSoccer.WIN
             currentNode.hasAnyFreeLink().not() -> TurnResultSoccer.LOSE
             currentNode.hasMoreThanOneLink() -> TurnResultSoccer.TURN_ONGOING
             currentNode.hasOnlyOneLink() -> TurnResultSoccer.TURN_OVER
-            winningNodes.contains(currentNode.rowIndex to currentNode.colIndex) -> TurnResultSoccer.WIN
             else -> TurnResultSoccer.TURN_ONGOING
         }
     }
