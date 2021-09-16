@@ -1,55 +1,96 @@
 package ai.aimachineserver.domain.gamelogic
 
-import kotlin.math.abs
+import kotlin.math.absoluteValue
 
-class Judge {
-    private companion object {
-        const val MIN_TURNS_COUNT = 5
-        const val MAX_TURNS_COUNT = 9
-    }
+class Judge(
+    private val sameValuesCountWinningCondition: Int = 3,
+    boardSize: Int = 3
+) {
+    private val minTurnsCount = 2 * sameValuesCountWinningCondition - 1
+    private val maxTurnsCount = boardSize * boardSize
 
     fun announceTurnResult(board: Board, turnNumber: Int): TurnResult {
         val fieldValues = board.getAllFieldValues()
         return when {
-            turnNumber < MIN_TURNS_COUNT -> TurnResult.GAME_ONGOING
+            turnNumber < minTurnsCount -> TurnResult.GAME_ONGOING
             isWinningConditionMet(fieldValues) -> TurnResult.WIN
-            turnNumber >= MAX_TURNS_COUNT -> TurnResult.TIE
+            turnNumber >= maxTurnsCount -> TurnResult.TIE
             else -> TurnResult.GAME_ONGOING
         }
     }
 
     private fun isWinningConditionMet(fieldValues: Array<IntArray>) = when {
-        areSameValuesOrthogonally(fieldValues) -> true
-        areSameValuesDiagonally(fieldValues) -> true
+        enoughValuesOrthogonally(fieldValues) -> true
+        enoughValuesDiagonally(fieldValues) -> true
         else -> false
     }
 
-    private fun areSameValuesOrthogonally(fieldValues: Array<IntArray>) = when {
-        areSameValuesInAnyRow(fieldValues) -> true
-        areSameValuesInAnyColumn(fieldValues) -> true
+    private fun enoughValuesOrthogonally(fieldValues: Array<IntArray>) = when {
+        enoughAdjacentValuesInAnyRow(fieldValues) -> true
+        enoughValuesInAnyColumn(fieldValues) -> true
         else -> false
     }
 
-    private fun areSameValuesInAnyRow(fieldValues: Array<IntArray>) = fieldValues.any { abs(it.sum()) == Board.SIZE }
-
-    private fun areSameValuesInAnyColumn(fieldValues: Array<IntArray>) =
-        (fieldValues.first().indices).any { colIndex ->
-            abs(fieldValues.sumOf { rowValues -> rowValues[colIndex] }) == Board.SIZE
-        }
-
-    private fun areSameValuesDiagonally(fieldValues: Array<IntArray>) = when {
-        areSameValuesMainDiagonal(fieldValues) -> true
-        areSameValuesAntiDiagonal(fieldValues) -> true
-        else -> false
-    }
-
-    private fun areSameValuesMainDiagonal(fieldValues: Array<IntArray>) =
-        abs((fieldValues.indices).sumOf { rowIndex -> fieldValues[rowIndex][rowIndex] }) == Board.SIZE
-
-    private fun areSameValuesAntiDiagonal(fieldValues: Array<IntArray>) =
-        abs(
-            (fieldValues.indices).sumOf { rowIndex ->
-                fieldValues[fieldValues.lastIndex - rowIndex][rowIndex]
+    private fun enoughAdjacentValuesInAnyRow(fieldValues: Array<IntArray>): Boolean {
+        fieldValues.forEach { colValues ->
+            colValues.dropLast(sameValuesCountWinningCondition - 1).forEachIndexed { j, _ ->
+                if ((j until j + sameValuesCountWinningCondition).sumOf {
+                    colValues[it]
+                }.absoluteValue == sameValuesCountWinningCondition
+                ) {
+                    return true
+                }
             }
-        ) == Board.SIZE
+        }
+        return false
+    }
+
+    private fun enoughValuesInAnyColumn(fieldValues: Array<IntArray>): Boolean {
+        val fieldValuesTransposed = transposeArray(fieldValues)
+        return enoughAdjacentValuesInAnyRow(fieldValuesTransposed)
+    }
+
+    private fun transposeArray(inputArray: Array<IntArray>): Array<IntArray> {
+        val outputArray = Array(inputArray.first().size) { IntArray(inputArray.size) }
+        for (i in 0..inputArray.lastIndex) {
+            for (j in 0..inputArray.first().lastIndex) {
+                outputArray[i][j] = inputArray[j][i]
+            }
+        }
+        return outputArray
+    }
+
+    private fun enoughValuesDiagonally(fieldValues: Array<IntArray>) = when {
+        enoughValuesOnDiagonals(fieldValues) -> true
+        enoughValuesOnAntiDiagonals(fieldValues) -> true
+        else -> false
+    }
+
+    private fun enoughValuesOnDiagonals(fieldValues: Array<IntArray>): Boolean {
+        for (i in 0..(fieldValues.size - sameValuesCountWinningCondition)) {
+            for (j in 0..(fieldValues.size - sameValuesCountWinningCondition)) {
+                if ((0 until sameValuesCountWinningCondition).sumOf {
+                    fieldValues[i + it][j + it]
+                }.absoluteValue == sameValuesCountWinningCondition
+                ) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun enoughValuesOnAntiDiagonals(fieldValues: Array<IntArray>): Boolean {
+        for (i in (sameValuesCountWinningCondition - 1)..fieldValues.lastIndex) {
+            for (j in 0..(fieldValues.size - sameValuesCountWinningCondition)) {
+                if ((0 until sameValuesCountWinningCondition).sumOf {
+                    fieldValues[i - it][j + it]
+                }.absoluteValue == sameValuesCountWinningCondition
+                ) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }

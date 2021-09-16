@@ -7,7 +7,7 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 
-class WebSocketServerHandler : TextWebSocketHandler() {
+class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSocketHandler() {
 
     private val games = mutableMapOf<String, Game>()
     private var roomsCounter = 1
@@ -34,7 +34,7 @@ class WebSocketServerHandler : TextWebSocketHandler() {
             println("player ${session.id} joined game $gameId")
             roomsCounter++
         } else {
-            val game = Game()
+            val game = gameFactory.createGame()
             game.onPlayerJoinedGame(session)
             games.putIfAbsent(gameId, game)
             println("games: ${games.keys}")
