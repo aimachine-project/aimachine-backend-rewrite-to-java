@@ -56,7 +56,7 @@ class GameSoccer(
 
     override fun onFieldClicked(rowIndex: Int, colIndex: Int) {
         if (board.isFieldAvailable(rowIndex, colIndex)) {
-            println("Clicked [row, col]: [$rowIndex, $colIndex]")
+            println("${if (currentPlayer == player1) "player1" else "player2"} clicked [row, col]: [$rowIndex, $colIndex]")
             val data = JSONObject()
                 .put("rowIndex", rowIndex)
                 .put("colIndex", colIndex)
@@ -91,6 +91,7 @@ class GameSoccer(
                             .put("eventType", "server_message")
                             .put("eventMessage", "Game has ended: $resultMessage")
                     )
+                    println(resultMessage)
                     broadcastMessage(
                         JSONObject()
                             .put("eventType", "movement_allowed")
@@ -113,19 +114,26 @@ class GameSoccer(
         else -> "Unexpected state, everyone is a winner"
     }
 
-    private fun formatMessage(condition: Boolean) = "${if (condition) player1.name else player2.name} won"
+    private fun formatMessage(condition: Boolean) =
+        "${(if (condition) "player 1 (${player1.name})" else "player 2 (${player2.name})")} won"
 
     override fun onDisconnect(session: WebSocketSession) {
-        playerSessions.remove(session)
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "server_message")
-                .put("eventMessage", "Player disconnected")
-        )
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "server_message")
-                .put("eventMessage", "${playerSessions.count()} players in game")
-        )
+        try {
+            playerSessions.remove(session)
+            broadcastMessage(
+                JSONObject()
+                    .put("eventType", "server_message")
+                    .put("eventMessage", "Player disconnected")
+            )
+            broadcastMessage(
+                JSONObject()
+                    .put("eventType", "server_message")
+                    .put("eventMessage", "${playerSessions.count()} players in game")
+            )
+        } catch (e: NullPointerException) {
+            println("No client ref. Both clients already disconnected. Cannot broadcast message to missing socket")
+        } catch (e: IllegalStateException) {
+            println("Illegal state. Both clients already disconnected. Cannot broadcast message to missing socket")
+        }
     }
 }

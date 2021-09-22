@@ -70,4 +70,9 @@ class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSock
             println("Ongoing games: ${games.keys}")
         }
     }
+
+    override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
+        println("An error has occurred at websocket session: ${session.id}")
+        println("Exception message: ${exception.message}")
+    }
 }
