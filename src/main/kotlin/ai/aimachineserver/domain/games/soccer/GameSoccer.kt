@@ -66,12 +66,25 @@ class GameSoccer(
                     .put("eventType", "field_to_be_marked")
                     .put("eventMessage", data)
             )
-            if (turnResult == TurnResultSoccer.TURN_ONGOING || turnResult == TurnResultSoccer.TURN_OVER) {
-                currentPlayer.makeMove(board, rowIndex, colIndex)
-                turnResult = judge.announceTurnResult()
-                if (turnResult == TurnResultSoccer.TURN_OVER) {
+            currentPlayer.makeMove(board, rowIndex, colIndex)
+            turnResult = judge.announceTurnResult()
+            when (turnResult) {
+                TurnResultSoccer.TURN_OVER -> {
                     currentPlayer = assignPlayer()
-                } else {
+                    broadcastMessage(
+                        JSONObject()
+                            .put("eventType", "movement_allowed")
+                            .put("eventMessage", currentPlayer.name)
+                    )
+                }
+                TurnResultSoccer.TURN_ONGOING -> {
+                    broadcastMessage(
+                        JSONObject()
+                            .put("eventType", "movement_allowed")
+                            .put("eventMessage", currentPlayer.name)
+                    )
+                }
+                else -> {
                     val resultMessage = getEndgameMessage()
                     broadcastMessage(
                         JSONObject()
@@ -83,13 +96,7 @@ class GameSoccer(
                             .put("eventType", "movement_allowed")
                             .put("eventMessage", "none")
                     )
-                    return
                 }
-                broadcastMessage(
-                    JSONObject()
-                        .put("eventType", "movement_allowed")
-                        .put("eventMessage", currentPlayer.name)
-                )
             }
         }
     }

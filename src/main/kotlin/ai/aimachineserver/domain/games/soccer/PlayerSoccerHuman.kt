@@ -29,7 +29,7 @@ class PlayerSoccerHuman(name: String) : PlayerSoccer(name) {
             rowsDiff == 0 && colsDiff == -1 -> {
                 board.makeLink(LINK_LEFT)
             }
-            rowsDiff == 1 && colsDiff == -1 -> {
+            rowsDiff == -1 && colsDiff == -1 -> {
                 board.makeLink(LINK_TOP_LEFT)
             }
         }
