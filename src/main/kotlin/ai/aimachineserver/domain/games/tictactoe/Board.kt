@@ -1,11 +1,13 @@
-package ai.aimachineserver.domain.gamelogic
+package ai.aimachineserver.domain.games.tictactoe
 
-class Board(private val allFieldValues: Array<IntArray> = Array(SIZE) { IntArray(SIZE) { BLANK_VALUE } }) {
+class Board(val size: Int = DEFAULT_SIZE) {
 
     companion object {
-        const val SIZE = 3
-        private const val BLANK_VALUE = 0
+        const val DEFAULT_SIZE = 3
+        const val EMPTY_FIELD_VALUE = 0
     }
+
+    private val allFieldValues: Array<IntArray> = Array(size) { IntArray(size) { EMPTY_FIELD_VALUE } }
 
     fun getAllFieldValues() = allFieldValues
 
@@ -17,7 +19,7 @@ class Board(private val allFieldValues: Array<IntArray> = Array(SIZE) { IntArray
         val availableFieldIndices = mutableListOf<Pair<Int, Int>>()
         allFieldValues.forEachIndexed { rowIndex, row ->
             row.forEachIndexed { colIndex, fieldValue ->
-                if (fieldValue == BLANK_VALUE) {
+                if (fieldValue == EMPTY_FIELD_VALUE) {
                     availableFieldIndices.add(Pair(rowIndex, colIndex))
                 }
             }
@@ -25,11 +27,11 @@ class Board(private val allFieldValues: Array<IntArray> = Array(SIZE) { IntArray
         return availableFieldIndices
     }
 
-    fun isFieldAvailable(rowIndex: Int, colIndex: Int) = allFieldValues[rowIndex][colIndex] == BLANK_VALUE
+    fun isFieldAvailable(rowIndex: Int, colIndex: Int) = allFieldValues[rowIndex][colIndex] == EMPTY_FIELD_VALUE
 
     fun clearAllFields() = allFieldValues.forEachIndexed { rowIndex, row ->
         row.indices.forEach { colIndex ->
-            allFieldValues[rowIndex][colIndex] = BLANK_VALUE
+            allFieldValues[rowIndex][colIndex] = EMPTY_FIELD_VALUE
         }
     }
 }

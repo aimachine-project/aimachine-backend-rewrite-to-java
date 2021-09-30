@@ -1,24 +1,28 @@
-package ai.aimachineserver.domain.gamelogic
+package ai.aimachineserver.domain.games.tictactoe
 
+import ai.aimachineserver.domain.games.Game
 import org.json.JSONObject
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 
-class Game {
+class GameTicTacToe(
+    private val board: Board = Board(),
+    private val judge: Judge = Judge(board)
+) : Game {
     private companion object {
         val playerStub = PlayerHuman("", Symbol.SYMBOL_X)
     }
 
-    private var board = Board()
-    private val judge = Judge()
     private var player1 = playerStub
     private var player2 = playerStub
     private var currentPlayer = player1
     private var turnResult = TurnResult.GAME_ONGOING
     private var turnNumber = 0
-    val playerSessions = mutableListOf<WebSocketSession>()
+    private val playerSessions = mutableListOf<WebSocketSession>()
 
-    fun onPlayerJoinedGame(session: WebSocketSession) {
+    override fun getPlayerSessions() = playerSessions
+
+    override fun onPlayerJoinedGame(session: WebSocketSession) {
         playerSessions.add(session)
         if (player1 == playerStub) {
             player1 = PlayerHuman(session.id, Symbol.SYMBOL_O)
@@ -45,13 +49,13 @@ class Game {
         )
     }
 
-    fun broadcastMessage(eventObject: JSONObject) {
+    override fun broadcastMessage(eventObject: JSONObject) {
         playerSessions.forEach {
             it.sendMessage(TextMessage(eventObject.toString()))
         }
     }
 
-    fun onFieldClicked(rowIndex: Int, colIndex: Int) {
+    override fun onFieldClicked(rowIndex: Int, colIndex: Int) {
         if (board.isFieldAvailable(rowIndex, colIndex)) {
             println("Clicked [row, col]: [$rowIndex, $colIndex]")
             val data = JSONObject()
@@ -66,8 +70,8 @@ class Game {
             )
             if (turnResult == TurnResult.GAME_ONGOING) {
                 turnNumber++
-                board = currentPlayer.makeMove(board, rowIndex, colIndex)
-                turnResult = judge.announceTurnResult(board, turnNumber)
+                currentPlayer.makeMove(board, rowIndex, colIndex)
+                turnResult = judge.announceTurnResult(turnNumber)
                 if (turnResult == TurnResult.GAME_ONGOING) {
                     changePlayer()
                 } else {
@@ -106,7 +110,7 @@ class Game {
         "${currentPlayer.symbol.identifier} won"
     }
 
-    fun onDisconnect(session: WebSocketSession) {
+    override fun onDisconnect(session: WebSocketSession) {
         playerSessions.remove(session)
         broadcastMessage(
             JSONObject()

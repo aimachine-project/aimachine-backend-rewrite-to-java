@@ -1,16 +1,14 @@
-package ai.aimachineserver.domain.gamelogic
+package ai.aimachineserver.domain.games.tictactoe
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(classes = [Board::class])
 class BoardTest {
 
-    private val emptyBoardFields = Array(3) { IntArray(3) { 0 } }
+    private val emptyBoardFields = Array(3) { IntArray(3) { Board.EMPTY_FIELD_VALUE } }
 
     @Test
-    fun init_noValuePassed_allFieldsBlank() {
+    fun init_noValuePassed_allFieldsEmpty() {
         assertThat(Board().getAllFieldValues()).isEqualTo(emptyBoardFields)
     }
 
@@ -57,5 +55,12 @@ class BoardTest {
         assertThat(board.getAllFieldValues()[2]).isEqualTo(intArrayOf(0, 1, 0))
         board.clearAllFields()
         assertThat(board.getAllFieldValues()).isEqualTo(emptyBoardFields)
+    }
+
+    @Test
+    fun initialize_boardSize14_allFieldsInitializedWithEmptyFieldValue() {
+        val board = Board(14)
+        val expected = Array(14) { IntArray(14) { Board.EMPTY_FIELD_VALUE } }
+        assertThat(board.getAllFieldValues()).isEqualTo(expected)
     }
 }

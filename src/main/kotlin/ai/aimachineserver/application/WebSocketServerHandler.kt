@@ -1,13 +1,13 @@
 package ai.aimachineserver.application
 
-import ai.aimachineserver.domain.gamelogic.Game
+import ai.aimachineserver.domain.games.Game
 import org.json.JSONObject
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 
-class WebSocketServerHandler : TextWebSocketHandler() {
+class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSocketHandler() {
 
     private val games = mutableMapOf<String, Game>()
     private var roomsCounter = 1
@@ -34,7 +34,7 @@ class WebSocketServerHandler : TextWebSocketHandler() {
             println("player ${session.id} joined game $gameId")
             roomsCounter++
         } else {
-            val game = Game()
+            val game = gameFactory.createGame()
             game.onPlayerJoinedGame(session)
             games.putIfAbsent(gameId, game)
             println("games: ${games.keys}")
@@ -56,7 +56,7 @@ class WebSocketServerHandler : TextWebSocketHandler() {
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         println("Client ${session.id} disconnected")
-        val gameId = games.entries.find { it.value.playerSessions.contains(session) }?.key
+        val gameId = games.entries.find { it.value.getPlayerSessions().contains(session) }?.key
         if (gameId != null) {
             val game = games.getValue(gameId)
             game.onDisconnect(session)
@@ -69,5 +69,10 @@ class WebSocketServerHandler : TextWebSocketHandler() {
             )
             println("Ongoing games: ${games.keys}")
         }
+    }
+
+    override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
+        println("An error has occurred at websocket session: ${session.id}")
+        println("Exception message: ${exception.message}")
     }
 }
