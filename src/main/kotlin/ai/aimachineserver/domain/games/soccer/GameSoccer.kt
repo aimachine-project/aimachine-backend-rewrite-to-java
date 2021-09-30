@@ -33,6 +33,15 @@ class GameSoccer(
                     .put("eventType", "movement_allowed")
                     .put("eventMessage", currentPlayer.name)
             )
+            val data = JSONObject()
+                .put("player1", player1.name)
+                .put("player2", player2.name)
+                .toString()
+            broadcastMessage(
+                JSONObject()
+                    .put("eventType", "game_starting")
+                    .put("eventMessage", data)
+            )
         }
         val playersCount = playerSessions.count()
         broadcastMessage(
