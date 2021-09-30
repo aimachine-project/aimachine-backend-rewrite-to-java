@@ -94,7 +94,7 @@ class BoardSoccer {
         if (
             isNotBorderNode(otherNodeRowIndex, otherNodeColIndex) &&
             isNodeInNearestNeighbourhood(otherNodeRowIndex, otherNodeColIndex) &&
-                doesNotHaveLinkAlready(otherNodeRowIndex, otherNodeColIndex)
+            doesNotHaveLinkAlready(otherNodeRowIndex, otherNodeColIndex)
         ) {
             nodes[otherNodeRowIndex][otherNodeColIndex].hasAnyFreeLink()
         } else {
