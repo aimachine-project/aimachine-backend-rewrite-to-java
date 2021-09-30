@@ -91,13 +91,57 @@ class BoardSoccer {
     fun getCurrentNode() = currentNode
 
     fun isFieldAvailable(otherNodeRowIndex: Int, otherNodeColIndex: Int) =
-        if (isNodeInNearestNeighbourHood(otherNodeRowIndex, otherNodeColIndex)) {
+        if (
+            isNotBorderNode(otherNodeRowIndex, otherNodeColIndex) &&
+            isNodeInNearestNeighbourhood(otherNodeRowIndex, otherNodeColIndex) &&
+                doesNotHaveLinkAlready(otherNodeRowIndex, otherNodeColIndex)
+        ) {
             nodes[otherNodeRowIndex][otherNodeColIndex].hasAnyFreeLink()
         } else {
             false
         }
 
-    private fun isNodeInNearestNeighbourHood(otherNodeRowIndex: Int, otherNodeColIndex: Int): Boolean {
+    private fun doesNotHaveLinkAlready(otherNodeRowIndex: Int, otherNodeColIndex: Int): Boolean {
+        val node = currentNode
+        val rowsDiff = otherNodeRowIndex - node.rowIndex
+        val colsDiff = otherNodeColIndex - node.colIndex
+        return !when {
+            rowsDiff == -1 && colsDiff == 0 -> {
+                node.hasLink(LINK_TOP)
+            }
+            rowsDiff == -1 && colsDiff == 1 -> {
+                node.hasLink(LINK_TOP_RIGHT)
+            }
+            rowsDiff == 0 && colsDiff == 1 -> {
+                node.hasLink(LINK_RIGHT)
+            }
+            rowsDiff == 1 && colsDiff == 1 -> {
+                node.hasLink(LINK_BOTTOM_RIGHT)
+            }
+            rowsDiff == 1 && colsDiff == 0 -> {
+                node.hasLink(LINK_BOTTOM)
+            }
+            rowsDiff == 1 && colsDiff == -1 -> {
+                node.hasLink(LINK_BOTTOM_LEFT)
+            }
+            rowsDiff == 0 && colsDiff == -1 -> {
+                node.hasLink(LINK_LEFT)
+            }
+            rowsDiff == -1 && colsDiff == -1 -> {
+                node.hasLink(LINK_TOP_LEFT)
+            }
+            else -> false
+        }
+    }
+
+    private fun isNotBorderNode(otherNodeRowIndex: Int, otherNodeColIndex: Int): Boolean {
+        val isNotMinMaxCol = otherNodeColIndex != 0 && otherNodeColIndex != BOARD_WIDTH
+        val isNotInGate =
+            (otherNodeRowIndex != 0 && otherNodeRowIndex != BOARD_HEIGHT) || abs(otherNodeColIndex - middleColIndex) <= gateHalfWidth
+        return isNotMinMaxCol && isNotInGate
+    }
+
+    private fun isNodeInNearestNeighbourhood(otherNodeRowIndex: Int, otherNodeColIndex: Int): Boolean {
         val rowsAbsDiff = abs(otherNodeRowIndex - currentNode.rowIndex)
         val colsAbsDiff = abs(otherNodeColIndex - currentNode.colIndex)
         return rowsAbsDiff <= 1 && colsAbsDiff <= 1 && rowsAbsDiff + colsAbsDiff != 0
