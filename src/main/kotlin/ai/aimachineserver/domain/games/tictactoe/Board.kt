@@ -1,6 +1,6 @@
-package ai.aimachineserver.domain.gamelogic
+package ai.aimachineserver.domain.games.tictactoe
 
-class Board(private val size: Int = DEFAULT_SIZE) {
+class Board(val size: Int = DEFAULT_SIZE) {
 
     companion object {
         const val DEFAULT_SIZE = 3
