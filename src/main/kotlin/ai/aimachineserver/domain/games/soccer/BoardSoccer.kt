@@ -31,8 +31,8 @@ class BoardSoccer {
         // link gate skews
         nodes[1][middleColIndex - gateHalfWidth].makeLink(LINK_TOP_LEFT)
         nodes[1][middleColIndex + gateHalfWidth].makeLink(LINK_TOP_RIGHT)
-        nodes[BOARD_HEIGHT - 1][middleColIndex - gateHalfWidth].makeLink(LINK_TOP_LEFT)
-        nodes[BOARD_HEIGHT - 1][middleColIndex + gateHalfWidth].makeLink(LINK_TOP_RIGHT)
+        nodes[BOARD_HEIGHT - 1][middleColIndex - gateHalfWidth].makeLink(LINK_BOTTOM_LEFT)
+        nodes[BOARD_HEIGHT - 1][middleColIndex + gateHalfWidth].makeLink(LINK_BOTTOM_RIGHT)
         // link gate side borders
         nodes[0][middleColIndex - 1].makeLink(LINK_BOTTOM)
         nodes[0][middleColIndex + 1].makeLink(LINK_BOTTOM)
