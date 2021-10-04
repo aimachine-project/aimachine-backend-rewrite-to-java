@@ -1,6 +1,7 @@
 package ai.aimachineserver.application
 
 import ai.aimachineserver.domain.games.Game
+import ai.aimachineserver.utils.WebSocketUtils.sendMessage
 import org.json.JSONObject
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -14,21 +15,9 @@ class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSock
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
         println("Client ${session.id} connected")
-        session.sendMessage(
-            TextMessage(
-                JSONObject()
-                    .put("eventType", "client_id")
-                    .put("eventMessage", session.id).toString()
-            )
-        )
+        session.sendMessage("eventType" to "client_id", "eventMessage" to session.id)
         val gameId = "game$roomsCounter"
-        session.sendMessage(
-            TextMessage(
-                JSONObject()
-                    .put("eventType", "game_id")
-                    .put("eventMessage", gameId).toString()
-            )
-        )
+        session.sendMessage("eventType" to "game_id", "eventMessage" to gameId)
         if (games.containsKey(gameId)) {
             games.getValue(gameId).onPlayerJoinedGame(session)
             println("player ${session.id} joined game $gameId")
@@ -56,17 +45,13 @@ class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSock
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         println("Client ${session.id} disconnected")
-        val gameId = games.entries.find { it.value.getPlayerSessions().contains(session) }?.key
+        val gameId = games.entries.find { it.value.getAllPlayerSessions().contains(session) }?.key
         if (gameId != null) {
             val game = games.getValue(gameId)
             game.onDisconnect(session)
             games.remove(gameId)
             val serverMessage = "Game has been disbanded. Restart client to play a new game"
-            game.broadcastMessage(
-                JSONObject()
-                    .put("eventType", "server_message")
-                    .put("eventMessage", serverMessage)
-            )
+            game.broadcastMessage("eventType" to "server_message", "eventMessage" to serverMessage)
             println("Ongoing games: ${games.keys}")
         }
     }
