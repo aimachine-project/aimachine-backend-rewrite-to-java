@@ -13,9 +13,23 @@ class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSock
     private val games = mutableMapOf<String, Game>()
     private var roomsCounter = 1
 
+    // create seperate counters for ai games if needed
+    // private val aiGames = mutableMapOf<String, Game>()
+    // private var aiRoomsCounter = 1
+
     override fun afterConnectionEstablished(session: WebSocketSession) {
         println("Client ${session.id} connected")
         session.sendMessage("eventType" to "client_id", "eventMessage" to session.id)
+
+        // add another, seperate situation for game with ai
+        // if (isGameWithAi) {
+        //     createGame
+        //     callAi
+        //     addAiToGame
+        // } else {
+        
+        // if game against human procede as before
+
         val gameId = "game$roomsCounter"
         session.sendMessage("eventType" to "game_id", "eventMessage" to gameId)
         if (games.containsKey(gameId)) {

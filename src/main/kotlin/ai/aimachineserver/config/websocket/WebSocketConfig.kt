@@ -18,6 +18,10 @@ class WebSocketConfig : WebSocketConfigurer {
         registry.addHandler(webSocketServerHandlerClassicTicTacToe(), "/games/tictactoe").setAllowedOrigins("*")
         registry.addHandler(webSocketServerHandlerTicTacToeNFields(), "/games/tictactoenfields").setAllowedOrigins("*")
         registry.addHandler(webSocketServerHandlerSoccer(), "/games/soccer").setAllowedOrigins("*")
+
+        // add another url for game with ai 
+        // add boolean argument to WebSocketHandler representing isGameWithAi
+        // registry.addHandler(webSocketServerHandlerSoccer(true), "/games/soccer/ai").setAllowedOrigins("*")
     }
 
     @Bean
