@@ -46,6 +46,7 @@ class GameSoccer(
                 JSONObject()
                     .put("eventType", "game_started")
                     .put("eventMessage", "game starting")
+            )
         }
         val playersCount = playerSessions.count()
         broadcastMessage(
