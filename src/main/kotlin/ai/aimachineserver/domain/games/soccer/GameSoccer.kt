@@ -42,6 +42,10 @@ class GameSoccer(
                     .put("eventType", "players_in_game")
                     .put("eventMessage", data)
             )
+            broadcastMessage(
+                JSONObject()
+                    .put("eventType", "game_started")
+                    .put("eventMessage", "game starting")
         }
         val playersCount = playerSessions.count()
         broadcastMessage(
@@ -97,8 +101,8 @@ class GameSoccer(
                     val resultMessage = getEndgameMessage()
                     broadcastMessage(
                         JSONObject()
-                            .put("eventType", "server_message")
-                            .put("eventMessage", "Game has ended: $resultMessage")
+                            .put("eventType", "game_ended")
+                            .put("eventMessage", resultMessage)
                     )
                     println(resultMessage)
                     broadcastMessage(

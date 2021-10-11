@@ -34,6 +34,10 @@ class GameTicTacToe(
                     .put("eventType", "current_player")
                     .put("eventMessage", currentPlayer.name)
             )
+            broadcastMessage(
+                JSONObject()
+                    .put("eventType", "game_started")
+                    .put("eventMessage", "game starting")
         }
         val playersCount = playerSessions.count()
         broadcastMessage(
@@ -78,8 +82,8 @@ class GameTicTacToe(
                     val resultMessage = getResultMessage()
                     broadcastMessage(
                         JSONObject()
-                            .put("eventType", "server_message")
-                            .put("eventMessage", "Game has ended: $resultMessage")
+                            .put("eventType", "game_ended")
+                            .put("eventMessage", resultMessage)
                     )
                     broadcastMessage(
                         JSONObject()
