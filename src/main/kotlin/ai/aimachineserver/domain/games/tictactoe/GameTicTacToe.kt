@@ -31,7 +31,7 @@ class GameTicTacToe(
             player2 = PlayerHuman(session.id, Symbol.SYMBOL_X)
             broadcastMessage(
                 JSONObject()
-                    .put("eventType", "movement_allowed")
+                    .put("eventType", "current_player")
                     .put("eventMessage", currentPlayer.name)
             )
         }
@@ -65,7 +65,7 @@ class GameTicTacToe(
                 .toString()
             broadcastMessage(
                 JSONObject()
-                    .put("eventType", "field_to_be_marked")
+                    .put("eventType", "new_move_to_mark")
                     .put("eventMessage", data)
             )
             if (turnResult == TurnResult.GAME_ONGOING) {
@@ -83,7 +83,7 @@ class GameTicTacToe(
                     )
                     broadcastMessage(
                         JSONObject()
-                            .put("eventType", "movement_allowed")
+                            .put("eventType", "current_player")
                             .put("eventMessage", "none")
                     )
                 }
@@ -99,7 +99,7 @@ class GameTicTacToe(
         }
         broadcastMessage(
             JSONObject()
-                .put("eventType", "movement_allowed")
+                .put("eventType", "current_player")
                 .put("eventMessage", currentPlayer.name)
         )
     }

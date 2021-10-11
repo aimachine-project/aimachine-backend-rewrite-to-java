@@ -44,7 +44,7 @@ class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSock
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val json = JSONObject(message.payload)
         when (json.getString("eventType")) {
-            "field_clicked" -> {
+            "make_move" -> {
                 val data = json.getJSONObject("eventMessage")
                 val gameId = data.getString("gameId")
                 val rowIndex = data.getInt("rowIndex")

@@ -30,7 +30,7 @@ class GameSoccer(
             player2 = PlayerSoccerHuman(session.id)
             broadcastMessage(
                 JSONObject()
-                    .put("eventType", "movement_allowed")
+                    .put("eventType", "current_player")
                     .put("eventMessage", currentPlayer.name)
             )
             val data = JSONObject()
@@ -39,7 +39,7 @@ class GameSoccer(
                 .toString()
             broadcastMessage(
                 JSONObject()
-                    .put("eventType", "game_starting")
+                    .put("eventType", "players_in_game")
                     .put("eventMessage", data)
             )
         }
@@ -72,7 +72,7 @@ class GameSoccer(
                 .toString()
             broadcastMessage(
                 JSONObject()
-                    .put("eventType", "field_to_be_marked")
+                    .put("eventType", "new_move_to_mark")
                     .put("eventMessage", data)
             )
             currentPlayer.makeMove(board, rowIndex, colIndex)
@@ -82,14 +82,14 @@ class GameSoccer(
                     currentPlayer = assignPlayer()
                     broadcastMessage(
                         JSONObject()
-                            .put("eventType", "movement_allowed")
+                            .put("eventType", "current_player")
                             .put("eventMessage", currentPlayer.name)
                     )
                 }
                 TurnResultSoccer.TURN_ONGOING -> {
                     broadcastMessage(
                         JSONObject()
-                            .put("eventType", "movement_allowed")
+                            .put("eventType", "current_player")
                             .put("eventMessage", currentPlayer.name)
                     )
                 }
@@ -103,7 +103,7 @@ class GameSoccer(
                     println(resultMessage)
                     broadcastMessage(
                         JSONObject()
-                            .put("eventType", "movement_allowed")
+                            .put("eventType", "current_player")
                             .put("eventMessage", "none")
                     )
                 }
