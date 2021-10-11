@@ -51,8 +51,8 @@ class GameSoccer(
         val playersCount = playerSessions.count()
         broadcastMessage(
             JSONObject()
-                .put("eventType", "server_message")
-                .put("eventMessage", "$playersCount players in game")
+                .put("eventType", "players_count")
+                .put("eventMessage", $playersCount)
         )
         val message = if (playersCount == 1) "Waiting for opponent" else "Game has started"
         broadcastMessage(

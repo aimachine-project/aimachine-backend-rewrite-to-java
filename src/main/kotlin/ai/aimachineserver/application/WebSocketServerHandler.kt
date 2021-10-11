@@ -64,7 +64,7 @@ class WebSocketServerHandler(private val gameFactory: GameFactory) : TextWebSock
             val serverMessage = "Game has been disbanded. Restart client to play a new game"
             game.broadcastMessage(
                 JSONObject()
-                    .put("eventType", "server_message")
+                    .put("eventType", "game_disbanded")
                     .put("eventMessage", serverMessage)
             )
             println("Ongoing games: ${games.keys}")
