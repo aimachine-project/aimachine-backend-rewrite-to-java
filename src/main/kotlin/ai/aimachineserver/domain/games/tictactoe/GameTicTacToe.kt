@@ -44,7 +44,7 @@ class GameTicTacToe(
         broadcastMessage(
             JSONObject()
                 .put("eventType", "players_count")
-                .put("eventMessage", $playersCount)
+                .put("eventMessage", playersCount)
         )
         val message = if (playersCount == 1) "Waiting for opponent" else "Game has started"
         broadcastMessage(
