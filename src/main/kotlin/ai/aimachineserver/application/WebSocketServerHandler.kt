@@ -79,7 +79,7 @@ class WebSocketServerHandler(
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val json = JSONObject(message.payload)
         when (json.getString("eventType")) {
-            "field_clicked" -> {
+            "make_move" -> {
                 val data = json.getJSONObject("eventMessage")
                 val gameId = data.getString("gameId")
                 val rowIndex = data.getInt("rowIndex")
@@ -121,7 +121,7 @@ class WebSocketServerHandler(
             game.onDisconnect(session)
             games.remove(gameId)
             val serverMessage = "Game has been disbanded. Restart client to play a new game"
-            game.broadcastMessage("eventType" to "server_message", "eventMessage" to serverMessage)
+            game.broadcastMessage("eventType" to "game_disbanded", "eventMessage" to serverMessage)
             println("Ongoing games: ${games.keys}")
         }
     }

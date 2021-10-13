@@ -26,18 +26,16 @@ class GameSoccer(
             currentPlayer = player1
         } else {
             player2 = PlayerSoccerHuman(session.id)
-            broadcastMessage("eventType" to "movement_allowed", "eventMessage" to currentPlayer.name)
+            broadcastMessage("eventType" to "current_player", "eventMessage" to currentPlayer.name)
             val data = JSONObject()
                 .put("player1", player1.name)
                 .put("player2", player2.name)
                 .toString()
-            broadcastMessage("eventType" to "game_starting", "eventMessage" to data)
+            broadcastMessage("eventType" to "players_in_game", "eventMessage" to data)
+            broadcastMessage("eventType" to "game_started", "eventMessage" to "game starting")
         }
         val playersCount = playerSessions.count()
-        broadcastMessage(
-            "eventType" to "server_message",
-            "eventMessage" to "$playersCount players in game"
-        )
+        broadcastMessage("eventType" to "players_count", "eventMessage" to "$playersCount")
         val message = if (playersCount == 1) "Waiting for opponent" else "Game has started"
         broadcastMessage("eventType" to "server_message", "eventMessage" to message)
     }
@@ -49,32 +47,29 @@ class GameSoccer(
                 .put("rowIndex", rowIndex)
                 .put("colIndex", colIndex)
                 .toString()
-            broadcastMessage("eventType" to "field_to_be_marked", "eventMessage" to data)
+            broadcastMessage("eventType" to "new_move_to_mark", "eventMessage" to data)
             currentPlayer.makeMove(board, rowIndex, colIndex)
             turnResult = judge.announceTurnResult()
             when (turnResult) {
                 TurnResultSoccer.TURN_OVER -> {
                     currentPlayer = assignPlayer()
                     broadcastMessage(
-                        "eventType" to "movement_allowed",
+                        "eventType" to "current_player",
                         "eventMessage" to currentPlayer.name
                     )
                 }
                 TurnResultSoccer.TURN_ONGOING -> {
                     broadcastMessage(
-                        "eventType" to "movement_allowed",
+                        "eventType" to "current_player",
                         "eventMessage" to currentPlayer.name
                     )
                 }
                 else -> {
                     val resultMessage = getEndgameMessage()
-                    broadcastMessage(
-                        "eventType" to "server_message",
-                        "eventMessage" to "Game has ended: $resultMessage"
-                    )
+                    broadcastMessage("eventType" to "game_ended", "eventMessage" to resultMessage)
                     println(resultMessage)
                     broadcastMessage(
-                        "eventType" to "movement_allowed",
+                        "eventType" to "current_player",
                         "eventMessage" to "none"
                     )
                 }

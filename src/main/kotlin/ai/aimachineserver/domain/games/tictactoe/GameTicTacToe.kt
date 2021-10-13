@@ -29,13 +29,10 @@ class GameTicTacToe(
             currentPlayer = player1
         } else {
             player2 = PlayerHuman(session.id, Symbol.SYMBOL_X)
-            broadcastMessage("eventType" to "movement_allowed", "eventMessage" to currentPlayer.name)
+            broadcastMessage("eventType" to "current_player", "eventMessage" to currentPlayer.name)
         }
         val playersCount = playerSessions.count()
-        broadcastMessage(
-            "eventType" to "server_message",
-            "eventMessage" to "$playersCount players in game"
-        )
+        broadcastMessage("eventType" to "players_count", "eventMessage" to "$playersCount")
         val message = if (playersCount == 1) "Waiting for opponent" else "Game has started"
         broadcastMessage("eventType" to "server_message", "eventMessage" to message)
     }
@@ -48,7 +45,7 @@ class GameTicTacToe(
                 .put("colIndex", colIndex)
                 .put("fieldToken", currentPlayer.symbol.token)
                 .toString()
-            broadcastMessage("eventType" to "field_to_be_marked", "eventMessage" to data)
+            broadcastMessage("eventType" to "new_move_to_mark", "eventMessage" to data)
             if (turnResult == TurnResult.GAME_ONGOING) {
                 turnNumber++
                 currentPlayer.makeMove(board, rowIndex, colIndex)
@@ -57,11 +54,8 @@ class GameTicTacToe(
                     changePlayer()
                 } else {
                     val resultMessage = getResultMessage()
-                    broadcastMessage(
-                        "eventType" to "server_message",
-                        "eventMessage" to "Game has ended: $resultMessage"
-                    )
-                    broadcastMessage("eventType" to "movement_allowed", "eventMessage" to "none")
+                    broadcastMessage("eventType" to "game_ended", "eventMessage" to resultMessage)
+                    broadcastMessage("eventType" to "current_player", "eventMessage" to "none")
                 }
             }
         }
@@ -73,7 +67,7 @@ class GameTicTacToe(
         } else {
             player1
         }
-        broadcastMessage("eventType" to "movement_allowed", "eventMessage" to currentPlayer.name)
+        broadcastMessage("eventType" to "current_player", "eventMessage" to currentPlayer.name)
     }
 
     private fun getResultMessage() = if (turnResult == TurnResult.TIE) {
