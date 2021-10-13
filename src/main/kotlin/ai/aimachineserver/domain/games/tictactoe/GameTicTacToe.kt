@@ -6,7 +6,8 @@ import org.springframework.web.socket.WebSocketSession
 
 class GameTicTacToe(
     private val board: Board = Board(),
-    private val judge: Judge = Judge(board)
+    private val judge: Judge = Judge(board),
+    override val gameName: String
 ) : AbstractGame() {
     private companion object {
         val playerStub = PlayerHuman("", Symbol.SYMBOL_X)

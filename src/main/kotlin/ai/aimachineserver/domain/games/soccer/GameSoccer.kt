@@ -6,7 +6,8 @@ import org.springframework.web.socket.WebSocketSession
 
 class GameSoccer(
     private val board: BoardSoccer = BoardSoccer(),
-    private val judge: JudgeSoccer = JudgeSoccer(board)
+    private val judge: JudgeSoccer = JudgeSoccer(board),
+    override val gameName: String
 ) : AbstractGame() {
     private companion object {
         val playerStub = PlayerSoccerHuman("")

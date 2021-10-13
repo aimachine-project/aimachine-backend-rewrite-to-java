@@ -7,6 +7,8 @@ import org.springframework.web.socket.WebSocketSession
 abstract class AbstractGame : Game {
     protected abstract val playerSessions: List<WebSocketSession>
 
+    abstract val gameName: String
+
     override fun getAllPlayerSessions() = playerSessions
 
     override fun broadcastMessage(vararg keyValues: Pair<String, String>) {
