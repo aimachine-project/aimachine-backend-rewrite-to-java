@@ -1,14 +1,14 @@
 package ai.aimachineserver.domain.games.tictactoe
 
-import ai.aimachineserver.domain.games.Game
+import ai.aimachineserver.domain.games.AbstractGame
 import org.json.JSONObject
-import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 
 class GameTicTacToe(
     private val board: Board = Board(),
-    private val judge: Judge = Judge(board)
-) : Game {
+    private val judge: Judge = Judge(board),
+    override val gameName: String
+) : AbstractGame() {
     private companion object {
         val playerStub = PlayerHuman("", Symbol.SYMBOL_X)
     }
@@ -18,9 +18,9 @@ class GameTicTacToe(
     private var currentPlayer = player1
     private var turnResult = TurnResult.GAME_ONGOING
     private var turnNumber = 0
-    private val playerSessions = mutableListOf<WebSocketSession>()
+    override val playerSessions = mutableListOf<WebSocketSession>()
 
-    override fun getPlayerSessions() = playerSessions
+    override fun getAllPlayerSessions() = playerSessions
 
     override fun onPlayerJoinedGame(session: WebSocketSession) {
         playerSessions.add(session)
@@ -29,35 +29,12 @@ class GameTicTacToe(
             currentPlayer = player1
         } else {
             player2 = PlayerHuman(session.id, Symbol.SYMBOL_X)
-            broadcastMessage(
-                JSONObject()
-                    .put("eventType", "current_player")
-                    .put("eventMessage", currentPlayer.name)
-            )
-            broadcastMessage(
-                JSONObject()
-                    .put("eventType", "game_started")
-                    .put("eventMessage", "game starting")
-            )
+            broadcastMessage("eventType" to "current_player", "eventMessage" to currentPlayer.name)
         }
         val playersCount = playerSessions.count()
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "players_count")
-                .put("eventMessage", playersCount)
-        )
+        broadcastMessage("eventType" to "players_count", "eventMessage" to "$playersCount")
         val message = if (playersCount == 1) "Waiting for opponent" else "Game has started"
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "server_message")
-                .put("eventMessage", message)
-        )
-    }
-
-    override fun broadcastMessage(eventObject: JSONObject) {
-        playerSessions.forEach {
-            it.sendMessage(TextMessage(eventObject.toString()))
-        }
+        broadcastMessage("eventType" to "server_message", "eventMessage" to message)
     }
 
     override fun onFieldClicked(rowIndex: Int, colIndex: Int) {
@@ -68,11 +45,7 @@ class GameTicTacToe(
                 .put("colIndex", colIndex)
                 .put("fieldToken", currentPlayer.symbol.token)
                 .toString()
-            broadcastMessage(
-                JSONObject()
-                    .put("eventType", "new_move_to_mark")
-                    .put("eventMessage", data)
-            )
+            broadcastMessage("eventType" to "new_move_to_mark", "eventMessage" to data)
             if (turnResult == TurnResult.GAME_ONGOING) {
                 turnNumber++
                 currentPlayer.makeMove(board, rowIndex, colIndex)
@@ -81,16 +54,8 @@ class GameTicTacToe(
                     changePlayer()
                 } else {
                     val resultMessage = getResultMessage()
-                    broadcastMessage(
-                        JSONObject()
-                            .put("eventType", "game_ended")
-                            .put("eventMessage", resultMessage)
-                    )
-                    broadcastMessage(
-                        JSONObject()
-                            .put("eventType", "current_player")
-                            .put("eventMessage", "none")
-                    )
+                    broadcastMessage("eventType" to "game_ended","eventMessage" to resultMessage)
+                    broadcastMessage("eventType" to "current_player","eventMessage" to "none")
                 }
             }
         }
@@ -102,11 +67,7 @@ class GameTicTacToe(
         } else {
             player1
         }
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "current_player")
-                .put("eventMessage", currentPlayer.name)
-        )
+        broadcastMessage("eventType" to "current_player", "eventMessage" to currentPlayer.name)
     }
 
     private fun getResultMessage() = if (turnResult == TurnResult.TIE) {
@@ -117,15 +78,10 @@ class GameTicTacToe(
 
     override fun onDisconnect(session: WebSocketSession) {
         playerSessions.remove(session)
+        broadcastMessage("eventType" to "server_message", "eventMessage" to "Player disconnected")
         broadcastMessage(
-            JSONObject()
-                .put("eventType", "server_message")
-                .put("eventMessage", "Player disconnected")
-        )
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "server_message")
-                .put("eventMessage", "${playerSessions.count()} players in game")
+            "eventType" to "server_message",
+            "eventMessage" to "${playerSessions.count()} players in game"
         )
     }
 }
