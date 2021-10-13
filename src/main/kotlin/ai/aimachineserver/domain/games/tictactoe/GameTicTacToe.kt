@@ -54,8 +54,8 @@ class GameTicTacToe(
                     changePlayer()
                 } else {
                     val resultMessage = getResultMessage()
-                    broadcastMessage("eventType" to "game_ended","eventMessage" to resultMessage)
-                    broadcastMessage("eventType" to "current_player","eventMessage" to "none")
+                    broadcastMessage("eventType" to "game_ended", "eventMessage" to resultMessage)
+                    broadcastMessage("eventType" to "current_player", "eventMessage" to "none")
                 }
             }
         }
