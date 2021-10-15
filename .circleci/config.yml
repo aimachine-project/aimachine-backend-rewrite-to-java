@@ -110,10 +110,6 @@ jobs:
           version: 20.10.2
 
       - run:
-          name: Build Jar
-          command: gradle bootJar
-
-      - run:
           name: Build and push Backend Docker image
           command: |
             docker build -t $DOCKERHUB_LOGIN/aimachine-backend .
