@@ -1,14 +1,14 @@
 package ai.aimachineserver.domain.games.soccer
 
-import ai.aimachineserver.domain.games.Game
+import ai.aimachineserver.domain.games.AbstractGame
 import org.json.JSONObject
-import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 
 class GameSoccer(
     private val board: BoardSoccer = BoardSoccer(),
-    private val judge: JudgeSoccer = JudgeSoccer(board)
-) : Game {
+    private val judge: JudgeSoccer = JudgeSoccer(board),
+    override val gameName: String
+) : AbstractGame() {
     private companion object {
         val playerStub = PlayerSoccerHuman("")
     }
@@ -17,9 +17,7 @@ class GameSoccer(
     private var player2 = playerStub
     private var currentPlayer = player1
     private var turnResult = TurnResultSoccer.TURN_ONGOING
-    private val playerSessions = mutableListOf<WebSocketSession>()
-
-    override fun getPlayerSessions() = playerSessions
+    override val playerSessions = mutableListOf<WebSocketSession>()
 
     override fun onPlayerJoinedGame(session: WebSocketSession) {
         playerSessions.add(session)
@@ -28,39 +26,18 @@ class GameSoccer(
             currentPlayer = player1
         } else {
             player2 = PlayerSoccerHuman(session.id)
-            broadcastMessage(
-                JSONObject()
-                    .put("eventType", "movement_allowed")
-                    .put("eventMessage", currentPlayer.name)
-            )
+            broadcastMessage("eventType" to "current_player", "eventMessage" to currentPlayer.name)
             val data = JSONObject()
                 .put("player1", player1.name)
                 .put("player2", player2.name)
                 .toString()
-            broadcastMessage(
-                JSONObject()
-                    .put("eventType", "game_starting")
-                    .put("eventMessage", data)
-            )
+            broadcastMessage("eventType" to "players_in_game", "eventMessage" to data)
+            broadcastMessage("eventType" to "game_started", "eventMessage" to "game starting")
         }
         val playersCount = playerSessions.count()
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "server_message")
-                .put("eventMessage", "$playersCount players in game")
-        )
+        broadcastMessage("eventType" to "players_count", "eventMessage" to "$playersCount")
         val message = if (playersCount == 1) "Waiting for opponent" else "Game has started"
-        broadcastMessage(
-            JSONObject()
-                .put("eventType", "server_message")
-                .put("eventMessage", message)
-        )
-    }
-
-    override fun broadcastMessage(eventObject: JSONObject) {
-        playerSessions.forEach {
-            it.sendMessage(TextMessage(eventObject.toString()))
-        }
+        broadcastMessage("eventType" to "server_message", "eventMessage" to message)
     }
 
     override fun onFieldClicked(rowIndex: Int, colIndex: Int) {
@@ -70,41 +47,30 @@ class GameSoccer(
                 .put("rowIndex", rowIndex)
                 .put("colIndex", colIndex)
                 .toString()
-            broadcastMessage(
-                JSONObject()
-                    .put("eventType", "field_to_be_marked")
-                    .put("eventMessage", data)
-            )
+            broadcastMessage("eventType" to "new_move_to_mark", "eventMessage" to data)
             currentPlayer.makeMove(board, rowIndex, colIndex)
             turnResult = judge.announceTurnResult()
             when (turnResult) {
                 TurnResultSoccer.TURN_OVER -> {
                     currentPlayer = assignPlayer()
                     broadcastMessage(
-                        JSONObject()
-                            .put("eventType", "movement_allowed")
-                            .put("eventMessage", currentPlayer.name)
+                        "eventType" to "current_player",
+                        "eventMessage" to currentPlayer.name
                     )
                 }
                 TurnResultSoccer.TURN_ONGOING -> {
                     broadcastMessage(
-                        JSONObject()
-                            .put("eventType", "movement_allowed")
-                            .put("eventMessage", currentPlayer.name)
+                        "eventType" to "current_player",
+                        "eventMessage" to currentPlayer.name
                     )
                 }
                 else -> {
                     val resultMessage = getEndgameMessage()
-                    broadcastMessage(
-                        JSONObject()
-                            .put("eventType", "server_message")
-                            .put("eventMessage", "Game has ended: $resultMessage")
-                    )
+                    broadcastMessage("eventType" to "game_ended", "eventMessage" to resultMessage)
                     println(resultMessage)
                     broadcastMessage(
-                        JSONObject()
-                            .put("eventType", "movement_allowed")
-                            .put("eventMessage", "none")
+                        "eventType" to "current_player",
+                        "eventMessage" to "none"
                     )
                 }
             }
@@ -130,14 +96,12 @@ class GameSoccer(
         try {
             playerSessions.remove(session)
             broadcastMessage(
-                JSONObject()
-                    .put("eventType", "server_message")
-                    .put("eventMessage", "Player disconnected")
+                "eventType" to "server_message",
+                "eventMessage" to "Player disconnected"
             )
             broadcastMessage(
-                JSONObject()
-                    .put("eventType", "server_message")
-                    .put("eventMessage", "${playerSessions.count()} players in game")
+                "eventType" to "server_message",
+                "eventMessage" to "${playerSessions.count()} players in game"
             )
         } catch (e: NullPointerException) {
             println("No client ref. Both clients already disconnected. Cannot broadcast message to missing socket")
