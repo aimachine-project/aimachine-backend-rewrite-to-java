@@ -1,5 +1,6 @@
 package ai.aimachineserver.application
 
+import ai.aimachineserver.AppConfig
 import ai.aimachineserver.application.commands.CreateUserCommand
 import ai.aimachineserver.application.dtos.UserDto
 import ai.aimachineserver.domain.user.User
@@ -13,13 +14,14 @@ import org.springframework.stereotype.Service
 class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val securityUtils: SecurityUtils
+    private val securityUtils: SecurityUtils,
+    appConfig: AppConfig
 ) {
 
     init {
-        val adminUsername = System.getenv("DB_AIM_USER_ROLE_ADMIN_USERNAME")
-        if (adminUsername != null && !userRepository.existsByUsername(adminUsername)) {
-            val adminPassword = System.getenv("DB_AIM_USER_ROLE_ADMIN_PASSWORD")
+        val adminUsername = appConfig.dbUserAdminUsername
+        if (!userRepository.existsByUsername(adminUsername)) {
+            val adminPassword = appConfig.dbUserAdminPassword
             val adminUser = User(adminUsername, passwordEncoder.encode(adminPassword), UserRole.ADMIN.roleName)
             userRepository.save(adminUser)
         }
