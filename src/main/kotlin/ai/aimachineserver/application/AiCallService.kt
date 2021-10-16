@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-@Configuration
 class AiCallService(
     private val restTemplate: RestTemplate,
     private val appConfig: AppConfig
