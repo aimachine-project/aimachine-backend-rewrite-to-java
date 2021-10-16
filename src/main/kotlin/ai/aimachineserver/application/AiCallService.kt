@@ -2,7 +2,6 @@ package ai.aimachineserver.application
 
 import ai.aimachineserver.AppConfig
 import ai.aimachineserver.application.commands.CallAiCommand
-import org.springframework.context.annotation.Configuration
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
