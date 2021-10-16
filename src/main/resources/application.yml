@@ -6,7 +6,7 @@ spring:
     active:
       - dev
   datasource:
-    url: jdbc:mysql://${DB_AIM_IP}/db_users?createDatabaseIfNotExist=true
+    url: jdbc:mysql://${DB_AIM_IP:localhost}/db_users?createDatabaseIfNotExist=true
     username: ${DB_AIM_USERNAME}
     password: ${DB_AIM_PASSWORD}
     initialization-mode: always
@@ -17,3 +17,8 @@ spring:
   data:
     rest:
       base-path: /api
+
+custom:
+  db-user-admin-username: ${DB_AIM_USER_ROLE_ADMIN_USERNAME:testUser}
+  db-user-admin-password: ${DB_AIM_USER_ROLE_ADMIN_PASSWORD:testPassword}
+  ai-service-url: http://${AIM_AI_DOMAIN_NAME:localhost}:8081
