@@ -12,8 +12,10 @@ class AiCallService(
     private val appConfig: AppConfig
 ) {
     fun callAi(command: CallAiCommand): ResponseEntity<String> {
-        val requestUrl =
-            "${appConfig.aiServiceUrl}/${command.gameName}?requestedGameType=${command.requestedGameType}&gameId=${command.gameId}"
+        val requestUrl = appConfig.aiServiceUrl +
+                "/${command.gameName}" +
+                "?requestedGameType=${command.requestedGameType}" +
+                "&gameId=${command.gameId}"
         return restTemplate.getForEntity(requestUrl, String::class.java)
     }
 }
