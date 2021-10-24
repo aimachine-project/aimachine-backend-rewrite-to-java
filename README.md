@@ -8,3 +8,6 @@ API Documentation:
 Corresponding projects:
 - front-end: https://github.com/aimachine-project/aimachine-frontend
 - AI client: https://github.com/aimachine-project/aimachine-ai
+
+Currently deployed images:
+https://hub.docker.com/u/syskaseb
