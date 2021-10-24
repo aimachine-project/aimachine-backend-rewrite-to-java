@@ -1,7 +1,7 @@
 package ai.aimachineserver.application
 
-import ai.aimachineserver.AppConfig
 import ai.aimachineserver.application.commands.CallAiCommand
+import ai.aimachineserver.config.AppConfig
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
