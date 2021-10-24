@@ -8,7 +8,6 @@ import springfox.documentation.service.BasicAuth
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 
-
 @Configuration
 class SwaggerConfig {
     @Bean
