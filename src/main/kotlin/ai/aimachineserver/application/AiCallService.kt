@@ -1,6 +1,6 @@
 package ai.aimachineserver.application
 
-import ai.aimachineserver.AppConfig
+import ai.aimachineserver.config.AppConfig
 import ai.aimachineserver.application.commands.CallAiCommand
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service

@@ -41,6 +41,8 @@ dependencies {
     implementation("javax.validation:validation-api:2.0.1.Final")
     implementation("mysql:mysql-connector-java:8.0.25")
     implementation("org.json:json:20210307")
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
+    compileOnly("io.springfox:springfox-swagger-ui:3.0.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")

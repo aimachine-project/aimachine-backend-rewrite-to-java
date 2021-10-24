@@ -1,6 +1,6 @@
 package ai.aimachineserver.application
 
-import ai.aimachineserver.AppConfig
+import ai.aimachineserver.config.AppConfig
 import ai.aimachineserver.application.commands.CreateUserCommand
 import ai.aimachineserver.application.dtos.UserDto
 import ai.aimachineserver.domain.user.User
