@@ -1,5 +1,7 @@
 package ai.aimachineserver.domain.games.tictactoe
 
+import java.util.AbstractMap
+
 class Board(val size: Int = DEFAULT_SIZE) {
 
     companion object {
@@ -15,7 +17,7 @@ class Board(val size: Int = DEFAULT_SIZE) {
         allFieldValues[rowIndex][colIndex] = fieldValue
     }
 
-    fun getAvailableFieldIndices(): List<Pair<Int, Int>> {
+    fun getAvailableFieldIndices(): List<AbstractMap.SimpleEntry<Int, Int>> {
         val availableFieldIndices = mutableListOf<Pair<Int, Int>>()
         allFieldValues.forEachIndexed { rowIndex, row ->
             row.forEachIndexed { colIndex, fieldValue ->
@@ -24,7 +26,7 @@ class Board(val size: Int = DEFAULT_SIZE) {
                 }
             }
         }
-        return availableFieldIndices
+        return availableFieldIndices.map { AbstractMap.SimpleEntry(it.first, it.second) }
     }
 
     fun isFieldAvailable(rowIndex: Int, colIndex: Int) = allFieldValues[rowIndex][colIndex] == EMPTY_FIELD_VALUE
