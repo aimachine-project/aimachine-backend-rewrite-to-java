@@ -2,7 +2,6 @@ package ai.aimachineserver.domain.games.tictactoe;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,11 +48,11 @@ class BoardTest {
         board.setFieldValue(2, 2, -1);
         board.setFieldValue(2, 1, 1);
         board.setFieldValue(1, 1, -1);
-        List<AbstractMap.SimpleEntry<Integer, Integer>> expected = Arrays.asList(
-                new AbstractMap.SimpleEntry<>(0, 2),
-                new AbstractMap.SimpleEntry<>(1, 0),
-                new AbstractMap.SimpleEntry<>(1, 2),
-                new AbstractMap.SimpleEntry<>(2, 0));
+        List<BoardCoords> expected = Arrays.asList(
+                new BoardCoords(0, 2),
+                new BoardCoords(1, 0),
+                new BoardCoords(1, 2),
+                new BoardCoords(2, 0));
         assertThat(board.getAvailableFieldIndices()).isEqualTo(expected);
     }
 
