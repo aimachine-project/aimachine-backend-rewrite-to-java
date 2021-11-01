@@ -43,6 +43,7 @@ dependencies {
     implementation("org.json:json:20210307")
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     compileOnly("io.springfox:springfox-swagger-ui:3.0.0")
+    compileOnly("org.projectlombok:lombok:1.18.20")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
