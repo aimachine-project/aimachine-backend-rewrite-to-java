@@ -23,7 +23,7 @@ class LoginController {
     ResponseEntity<UsernameWrapper> login() {
         UserDto user = userService.getSelf();
         if (user != null) {
-            return new ResponseEntity<>(new UsernameWrapper(user.getUsername()), HttpStatus.OK);
+            return new ResponseEntity<>(new UsernameWrapper(user.username), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

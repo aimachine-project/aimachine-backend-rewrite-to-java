@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class BoardTest {
 
-    int[][] emptyBoardFields = new int[3][3];
+    final int[][] emptyBoardFields = new int[3][3];
 
     {
         for (int[] row : emptyBoardFields) {
