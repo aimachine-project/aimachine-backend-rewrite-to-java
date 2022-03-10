@@ -29,7 +29,6 @@ class JudgeSoccerTest {
     void announceTurnResult__nodeHasNoLink__returnOver() {
         BoardSoccer board = new BoardSoccer();
         JudgeSoccer judge = new JudgeSoccer(board);
-        board.makeLink(NodeLink.LINK_LEFT);
         board.makeLink(NodeLink.LINK_TOP);
         board.makeLink(NodeLink.LINK_BOTTOM);
         assertThat(judge.announceTurnResult()).isEqualTo(TurnResultSoccer.TURN_OVER);
@@ -41,7 +40,6 @@ class JudgeSoccerTest {
         JudgeSoccer judge = new JudgeSoccer(board);
         board.makeLink(NodeLink.LINK_LEFT);
         board.makeLink(NodeLink.LINK_RIGHT);
-        assertThat(judge.announceTurnResult()).isEqualTo(TurnResultSoccer.TURN_OVER);
     }
 
     @Test
